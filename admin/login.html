@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الإدارة | بركات المناسك</title>
+<link rel="icon" type="image/png" href="../Logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="login-page">
+
+<div class="login-card">
+  <div class="login-logo">
+    <img src="../Logo.png" alt="بركات المناسك">
+    <h1>لوحة الإدارة</h1>
+    <p>سجّل الدخول لإدارة الموقع</p>
+  </div>
+
+  <div class="login-error" id="loginError"></div>
+
+  <form id="loginForm">
+    <div class="form-group">
+      <label for="email">البريد الإلكتروني</label>
+      <input type="email" id="email" class="form-input" placeholder="admin@barakatalmanasik.com" required autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label for="password">كلمة المرور</label>
+      <input type="password" id="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+    </div>
+    <button type="submit" class="login-btn" id="loginBtn">
+      <span id="loginText">تسجيل الدخول</span>
+      <div class="login-loader" id="loginLoader"></div>
+    </button>
+  </form>
+
+  <div class="login-footer">
+    <a href="../index.html">العودة للموقع</a>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="auth.js"></script>
+</body>
+</html>

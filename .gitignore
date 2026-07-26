@@ -1,0 +1,45 @@
+# ═══════════════════════════════════════
+# Barakat Al-Manasik - .gitignore
+# ═══════════════════════════════════════
+
+# OS Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# Logs
+*.log
+
+# Dependencies
+node_modules/
+bower_components/
+
+# Environment / Secrets
+.env
+.env.local
+.env.*.local
+
+# Firebase (keep config, ignore cache)
+.firebase/
+firebase-debug.log
+
+# Build output
+dist/
+build/
+
+# Temporary
+tmp/
+temp/
+*.tmp
