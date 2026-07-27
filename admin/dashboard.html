@@ -32,6 +32,57 @@
 
 <!-- Dashboard Body -->
 <main class="dash-body">
+
+  <!-- ═══ Stats Row ═══ -->
+  <div class="stats-row">
+    <div class="stat-card stat-total">
+      <div class="stat-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-num" id="statTotal">0</div>
+        <div class="stat-label">إجمالي التعليقات</div>
+      </div>
+    </div>
+    <div class="stat-card stat-pending-card">
+      <div class="stat-icon stat-icon-pending">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-num" id="statPending">0</div>
+        <div class="stat-label">معلّقة</div>
+      </div>
+    </div>
+    <div class="stat-card stat-approved-card">
+      <div class="stat-icon stat-icon-approved">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-num" id="statApproved">0</div>
+        <div class="stat-label">معتمدة</div>
+      </div>
+    </div>
+    <div class="stat-card stat-rejected-card">
+      <div class="stat-icon stat-icon-rejected">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-num" id="statRejected">0</div>
+        <div class="stat-label">مرفوضة</div>
+      </div>
+    </div>
+    <div class="stat-card stat-avg-card">
+      <div class="stat-icon stat-icon-avg">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-num"><span id="statAvg">0.0</span> <span class="stat-avg-label">/ 5</span></div>
+        <div class="stat-label">متوسط التقييم</div>
+        <div id="statAvgStars" class="stat-avg-stars"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="admin-grid">
 
     <!-- ═══ 1. Comments Card ═══ -->
@@ -39,13 +90,19 @@
       <div class="admin-card-header">
         <h2>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          التعليقات
-          <span class="count" id="commentCount">0</span>
+          إدارة التعليقات
         </h2>
       </div>
       <div class="admin-card-body">
+        <!-- Tabs -->
+        <div class="tabs">
+          <button class="tab-btn" data-filter="all">الكل <span class="tab-badge" id="badgeAll">0</span></button>
+          <button class="tab-btn active" data-filter="pending">معلّق <span class="tab-badge tab-badge-pending" id="badgePending">0</span></button>
+          <button class="tab-btn" data-filter="approved">معتمد <span class="tab-badge tab-badge-approved" id="badgeApproved">0</span></button>
+          <button class="tab-btn" data-filter="rejected">مرفوض <span class="tab-badge tab-badge-rejected" id="badgeRejected">0</span></button>
+        </div>
         <div class="comment-list" id="commentList">
-          <div class="comment-empty">لا توجد تعليقات معلّقة</div>
+          <div class="comment-empty">جاري التحميل...</div>
         </div>
       </div>
     </div>
@@ -65,9 +122,7 @@
           <span>PNG, JPG, WEBP — حد أقصى 5MB</span>
           <input type="file" id="uploadInput" class="upload-input" accept="image/*">
         </div>
-        <div class="img-grid" id="imageGrid">
-          <!-- Images loaded dynamically -->
-        </div>
+        <div class="img-grid" id="imageGrid"></div>
       </div>
     </div>
 
@@ -126,6 +181,51 @@
 
   </div>
 </main>
+
+<!-- ═══ Edit Modal ═══ -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>تعديل التعليق</h3>
+      <button class="modal-close" id="editCloseBtn" aria-label="إغلاق">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <form class="modal-body" id="editForm">
+      <div class="modal-field">
+        <label>الاسم</label>
+        <input type="text" id="editName" required minlength="3" maxlength="100">
+      </div>
+      <div class="modal-field">
+        <label>الخدمة</label>
+        <input type="text" id="editService" maxlength="50">
+      </div>
+      <div class="modal-field">
+        <label>التعليق</label>
+        <textarea id="editText" rows="3" required minlength="10" maxlength="500"></textarea>
+      </div>
+      <div class="modal-row">
+        <div class="modal-field">
+          <label>التقييم</label>
+          <div class="modal-stars" id="editStarsWrap"></div>
+          <input type="hidden" id="editStarsValue" value="5">
+        </div>
+        <div class="modal-field">
+          <label>الحالة</label>
+          <select id="editStatus">
+            <option value="pending">معلّق</option>
+            <option value="approved">معتمد</option>
+            <option value="rejected">مرفوض</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="modal-btn modal-btn-cancel" id="editCancelBtn">إلغاء</button>
+        <button type="submit" class="modal-btn modal-btn-save">حفظ التعديلات</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>

@@ -388,16 +388,27 @@
       </div>
     </div>
     <!-- Comment Form -->
-    <div class="comment-form-wrap" data-anim="fade-up" style="margin-top:clamp(40px,5vw,60px);max-width:560px;margin-left:auto;margin-right:auto">
-      <h3 style="font-family:var(--h);font-size:18px;font-weight:700;color:var(--g900);text-align:center;margin-bottom:20px">أضف تقييمك</h3>
-      <form id="commentForm" style="background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-          <input type="text" id="cName" placeholder="اسمك" required style="padding:12px 14px;border:1.5px solid var(--g200);border-radius:var(--r-sm);font-size:14px;font-family:var(--b);outline:none;transition:border-color .25s">
-          <input type="text" id="cService" placeholder="الخدمة (مثلاً: العمرة)" style="padding:12px 14px;border:1.5px solid var(--g200);border-radius:var(--r-sm);font-size:14px;font-family:var(--b);outline:none;transition:border-color .25s">
+    <div class="comment-form-wrap" data-anim="fade-up">
+      <h3 class="cf-title">أضف تقييمك</h3>
+      <form id="commentForm" class="cf-form">
+        <input type="hidden" id="starValue" value="0">
+        <div class="cf-grid">
+          <input type="text" id="cName" class="cf-input" placeholder="اسمك (3 أحرف على الأقل)" required maxlength="100">
+          <input type="text" id="cService" class="cf-input" placeholder="الخدمة (مثلاً: العمرة)" maxlength="50">
         </div>
-        <textarea id="cText" placeholder="اكتب تقييمك هنا..." required rows="3" style="width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:var(--r-sm);font-size:14px;font-family:var(--b);outline:none;resize:vertical;margin-bottom:14px;transition:border-color .25s"></textarea>
-        <button type="submit" id="cSubmit" style="width:100%;padding:13px;background:var(--navy);color:var(--white);border:none;border-radius:var(--r-sm);font-size:14px;font-weight:600;font-family:var(--b);cursor:pointer;transition:all .3s var(--ease)">إرسال التقييم</button>
-        <p id="cMsg" style="text-align:center;font-size:13px;margin-top:10px;display:none"></p>
+        <div class="cf-stars-wrap">
+          <label class="cf-stars-label">تقييمك:</label>
+          <div class="cf-stars" id="starRating">
+            <button type="button" class="star-btn" data-value="1" aria-label="نجمة واحدة">&#9733;</button>
+            <button type="button" class="star-btn" data-value="2" aria-label="نجمتان">&#9733;</button>
+            <button type="button" class="star-btn" data-value="3" aria-label="3 نجوم">&#9733;</button>
+            <button type="button" class="star-btn" data-value="4" aria-label="4 نجوم">&#9733;</button>
+            <button type="button" class="star-btn" data-value="5" aria-label="5 نجوم">&#9733;</button>
+          </div>
+        </div>
+        <textarea id="cText" class="cf-textarea" placeholder="اكتب تقييمك هنا... (10 أحرف على الأقل)" required rows="3" maxlength="500"></textarea>
+        <button type="submit" id="cSubmit" class="cf-submit">إرسال التقييم</button>
+        <p id="cMsg" class="cf-msg"></p>
       </form>
     </div>
   </div>

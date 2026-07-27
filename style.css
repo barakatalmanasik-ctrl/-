@@ -34,6 +34,8 @@
   /* Functional */
   --wa:          #25D366;
   --wa-d:        #1DA851;
+  --red:         #EF4444;
+  --red-d:       #DC2626;
 
   /* Surface */
   --surface:     var(--white);
@@ -238,6 +240,7 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 .testi-card{min-width:100%;background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:36px 28px;flex-shrink:0}
 .testi-stars{display:flex;gap:2px;margin-bottom:16px}
 .testi-stars svg{color:var(--gold);width:16px;height:16px}
+.testi-stars svg[fill="none"]{color:var(--g200)}
 .testi-txt{font-size:15px;color:var(--g600);line-height:1.95;margin-bottom:24px;font-style:italic}
 .testi-author{display:flex;align-items:center;gap:14px}
 .testi-av{width:44px;height:44px;min-width:44px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:700;font-size:15px}
@@ -249,6 +252,38 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 .testi-dots{display:flex;gap:8px}
 .testi-dot{width:8px;height:8px;border-radius:50%;background:var(--g200);cursor:pointer;transition:all .3s var(--ease)}
 .testi-dot.on{background:var(--navy);width:28px;border-radius:4px}
+
+/* ── Comment Form ── */
+.comment-form-wrap{margin-top:clamp(40px,5vw,60px);max-width:560px;margin-left:auto;margin-right:auto}
+.cf-title{font-family:var(--h);font-size:18px;font-weight:700;color:var(--g900);text-align:center;margin-bottom:20px}
+.cf-form{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px}
+.cf-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.cf-input{padding:12px 14px;border:1.5px solid var(--g200);border-radius:var(--r-sm);font-size:14px;font-family:var(--b);color:var(--g800);outline:none;transition:border-color .25s,box-shadow .25s;width:100%}
+.cf-input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,42,74,.08)}
+.cf-input::placeholder{color:var(--g300)}
+.cf-textarea{width:100%;padding:12px 14px;border:1.5px solid var(--g200);border-radius:var(--r-sm);font-size:14px;font-family:var(--b);color:var(--g800);outline:none;resize:vertical;margin-bottom:14px;transition:border-color .25s,box-shadow .25s;min-height:80px}
+.cf-textarea:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(27,42,74,.08)}
+.cf-textarea::placeholder{color:var(--g300)}
+
+/* Star Rating */
+.cf-stars-wrap{margin-bottom:14px}
+.cf-stars-label{display:block;font-size:13px;font-weight:600;color:var(--g600);margin-bottom:8px}
+.cf-stars{display:flex;gap:4px;direction:ltr}
+.star-btn{font-size:28px;color:var(--g200);cursor:pointer;transition:color .2s,transform .2s;padding:2px 4px;line-height:1;background:none;border:none}
+.star-btn:hover{transform:scale(1.15)}
+.star-btn.active{color:var(--gold)}
+
+.cf-submit{width:100%;padding:13px;background:var(--navy);color:var(--white);border:none;border-radius:var(--r-sm);font-size:14px;font-weight:600;font-family:var(--b);cursor:pointer;transition:all .3s var(--ease)}
+.cf-submit:hover{background:var(--navy-light);transform:translateY(-1px);box-shadow:0 4px 18px rgba(27,42,74,.2)}
+.cf-submit:active{transform:translateY(0)}
+.cf-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.cf-msg{text-align:center;font-size:13px;margin-top:10px;display:none;line-height:1.6}
+
+/* ── Comment Toast ── */
+.c-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);padding:14px 28px;border-radius:var(--r-sm);font-size:13px;font-weight:500;z-index:9999;transition:transform .4s var(--ease),opacity .4s var(--ease);opacity:0;pointer-events:none;box-shadow:var(--sh-lg);color:var(--white)}
+.c-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.c-toast-success{background:var(--emerald)}
+.c-toast-error{background:var(--red)}
 
 /* ── Contact ── */
 .contact-grid{display:grid;grid-template-columns:1fr;gap:32px}
