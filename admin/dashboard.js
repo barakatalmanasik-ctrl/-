@@ -469,16 +469,16 @@ function replaceImage(id,file){
 
   toast('جاري الاستبدال...');
 
+  var newPath='images/'+Date.now()+'_'+file.name;
+
   db.collection('images').doc(id).get().then(function(doc){
     if(!doc.exists)return Promise.reject('not found');
     var old=doc.data();
 
     if(old.storagePath){storage.ref(old.storagePath).delete().catch(function(){})}
 
-    var path='images/'+Date.now()+'_'+file.name;
-    return storage.ref(path).put(file).then(function(){return storage.ref(path).getDownloadURL()});
+    return storage.ref(newPath).put(file).then(function(){return storage.ref(newPath).getDownloadURL()});
   }).then(function(url){
-    var newPath='images/'+Date.now()+'_'+file.name;
     return db.collection('images').doc(id).update({
       name:file.name,
       url:url,

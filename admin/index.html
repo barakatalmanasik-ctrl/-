@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الإدارة | بركات المناسك</title>
+<link rel="icon" type="image/png" href="../Logo.png">
+<style>
+body{margin:0;padding:0;background:#F6F7F9;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'Tajawal',sans-serif}
+.spinner{width:36px;height:36px;border:3px solid #E2E6ED;border-top-color:#1B2A4A;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.msg{text-align:center;color:#8C95A8;font-size:14px;margin-top:16px}
+</style>
+</head>
+<body>
+<div>
+  <div class="spinner"></div>
+  <div class="msg">جاري التحقق...</div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+(function(){
+  try{firebase.initializeApp(firebaseConfig)}catch(e){}
+  var auth=firebase.auth();
+  auth.onAuthStateChanged(function(user){
+    if(user && user.email===ADMIN_EMAIL){
+      window.location.replace('dashboard.html');
+    }else{
+      window.location.replace('login.html');
+    }
+  });
+  setTimeout(function(){window.location.replace('login.html')},5000);
+})();
+</script>
+</body>
+</html>
