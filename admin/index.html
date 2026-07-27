@@ -19,19 +19,27 @@ body{margin:0;padding:0;background:#F6F7F9;display:flex;align-items:center;justi
 </div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js"></script>
+<script src="admin.js"></script>
 <script>
 (function(){
   try{firebase.initializeApp(firebaseConfig)}catch(e){}
   var auth=firebase.auth();
+
   auth.onAuthStateChanged(function(user){
-    if(user && user.email===ADMIN_EMAIL){
-      window.location.replace('dashboard.html');
-    }else{
+    if(!user){
       window.location.replace('login.html');
+      return;
     }
+    AdminSession.verify(user).then(function(){
+      window.location.replace('dashboard.html');
+    }).catch(function(){
+      auth.signOut().then(function(){window.location.replace('login.html')});
+    });
   });
-  setTimeout(function(){window.location.replace('login.html')},5000);
+
+  setTimeout(function(){window.location.replace('login.html')},8000);
 })();
 </script>
 </body>

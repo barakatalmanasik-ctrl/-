@@ -2,21 +2,58 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    /* Helper: check if requester is the admin */
+    /* ═══════════════════════════════════════
+       HELPER: isAdmin()
+       Reads admins/{uid} to verify role
+       Used for non-admins collection access
+       ═══════════════════════════════════════ */
     function isAdmin() {
       return request.auth != null
-             && request.auth.token.email == 'admin@barakatalmanasik.com';
+             && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    /* ═══════════════════════════════════════
+       ADMINS COLLECTION
+       Schema: admins/{uid} = { role, email, createdAt, permissions }
+       - Users can READ their own admin document (self-check)
+       - Users can READ other admin docs only if they are admin (admin panel listing)
+       - No self-escalation: unauthenticated users cannot write
+       - Only existing admins can create/update other admin docs
+       ═══════════════════════════════════════ */
+    match /admins/{adminId} {
+      /* Self-read: anyone authenticated can read their own doc */
+      allow read: if request.auth != null
+                  && request.auth.uid == adminId;
+
+      /* Admin-read: admin can read other admin docs (for future multi-admin panel) */
+      allow read: if request.auth != null
+                  && request.auth.uid != adminId
+                  && isAdmin();
+
+      /* Create: only existing admins can create new admin docs */
+      allow create: if request.auth != null
+                    && isAdmin()
+                    && request.resource.data.role is string
+                    && request.resource.data.role in ['admin', 'editor', 'viewer'];
+
+      /* Update: only existing admins can update */
+      allow update: if request.auth != null
+                    && isAdmin();
+
+      /* Delete: only existing admins can delete other admin docs, cannot delete self */
+      allow delete: if request.auth != null
+                    && request.auth.uid != adminId
+                    && isAdmin();
     }
 
     /* ═══════════════════════════════════════
        COMMENTS COLLECTION
-       - Visitors can ADD comments only
-       - Visitors can READ only approved comments
-       - Admin can do everything
+       Schema: comments/{id} = { name, service, text, stars, status, approved, createdAt, ... }
        ═══════════════════════════════════════ */
     match /comments/{commentId} {
-      /* Anyone can create a comment (pending by default) */
-      allow create: if request.resource.data.keys().hasAll(['name', 'text', 'stars', 'status', 'createdAt'])
+      /* Anyone authenticated can create a comment (pending by default) */
+      allow create: if request.auth != null
+                    && request.resource.data.keys().hasAll(['name', 'text', 'stars', 'status', 'createdAt'])
                     && request.resource.data.name is string
                     && request.resource.data.name.size() >= 3
                     && request.resource.data.name.size() <= 100
@@ -29,20 +66,20 @@ service cloud.firestore {
                     && request.resource.data.status == 'pending'
                     && request.resource.data.approved == false;
 
-      /* Visitors can only read approved comments; admin can read all */
+      /* Public: read only approved; Admin: read all */
       allow read: if resource.data.status == 'approved' || isAdmin();
 
-      /* Only admin can update comments */
+      /* Admin only: update */
       allow update: if isAdmin();
 
-      /* Only admin can delete comments */
+      /* Admin only: delete */
       allow delete: if isAdmin();
     }
 
     /* ═══════════════════════════════════════
        IMAGES COLLECTION
-       - Anyone can read (needed for site display)
-       - Only admin can write
+       Schema: images/{id} = { name, url, storagePath, size, createdAt }
+       Public read (needed for site display), admin write
        ═══════════════════════════════════════ */
     match /images/{imageId} {
       allow read: if true;
@@ -51,8 +88,8 @@ service cloud.firestore {
 
     /* ═══════════════════════════════════════
        SETTINGS COLLECTION
-       - Public read for company data
-       - Only admin can write
+       Schema: settings/{id} = { ... fields }
+       Public read (company info), admin write
        ═══════════════════════════════════════ */
     match /settings/{settingId} {
       allow read: if true;
@@ -60,15 +97,8 @@ service cloud.firestore {
     }
 
     /* ═══════════════════════════════════════
-       ADMINS COLLECTION (future multi-admin)
-       - Only admins can manage
-       ═══════════════════════════════════════ */
-    match /admins/{adminId} {
-      allow read, write: if isAdmin();
-    }
-
-    /* ═══════════════════════════════════════
        SERVICES COLLECTION (future expansion)
+       Public read, admin write
        ═══════════════════════════════════════ */
     match /services/{serviceId} {
       allow read: if true;
@@ -77,6 +107,7 @@ service cloud.firestore {
 
     /* ═══════════════════════════════════════
        OFFERS COLLECTION (future expansion)
+       Public read, admin write
        ═══════════════════════════════════════ */
     match /offers/{offerId} {
       allow read: if true;
@@ -85,10 +116,19 @@ service cloud.firestore {
 
     /* ═══════════════════════════════════════
        NEWS COLLECTION (future expansion)
+       Public read, admin write
        ═══════════════════════════════════════ */
     match /news/{newsId} {
       allow read: if true;
       allow create, update, delete: if isAdmin();
+    }
+
+    /* ═══════════════════════════════════════
+       ADMIN_LOGS COLLECTION (future expansion)
+       Admin read/write only
+       ═══════════════════════════════════════ */
+    match /admin_logs/{logId} {
+      allow read, write: if isAdmin();
     }
   }
 }

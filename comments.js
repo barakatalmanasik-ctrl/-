@@ -6,7 +6,11 @@
 'use strict';
 
 try{firebase.initializeApp(firebaseConfig)}catch(e){}
+var auth=firebase.auth();
 var db=firebase.firestore();
+
+/* Enable anonymous auth so visitors can submit comments */
+auth.signInAnonymously().catch(function(){});
 
 /* ── Config ── */
 var MIN_NAME=3;
@@ -152,26 +156,39 @@ if(form)form.addEventListener('submit',function(e){
 
   setLoading(true);
 
-  db.collection('comments').add({
-    name:name.trim(),
-    service:service.trim(),
-    text:text.trim(),
-    stars:stars,
-    status:'pending',
-    approved:false,
-    createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-    approvedAt:null
-  }).then(function(){
-    showMsg('تم إرسال تقييمك بنجاح! سيظهر بعد مراجعة الإدارة.','success');
-    form.reset();
-    setStars(0);
-    markSubmitted();
-    setLoading(false);
-  }).catch(function(err){
-    console.error('Comment submit error:',err);
-    showMsg('حدث خطأ أثناء الإرسال. حاول مرة أخرى.','error');
-    setLoading(false);
-  });
+  function submitComment(){
+    db.collection('comments').add({
+      name:name.trim(),
+      service:service.trim(),
+      text:text.trim(),
+      stars:stars,
+      status:'pending',
+      approved:false,
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      approvedAt:null
+    }).then(function(){
+      showMsg('تم إرسال تقييمك بنجاح! سيظهر بعد مراجعة الإدارة.','success');
+      form.reset();
+      setStars(0);
+      markSubmitted();
+      setLoading(false);
+    }).catch(function(err){
+      console.error('Comment submit error:',err);
+      showMsg('حدث خطأ أثناء الإرسال. حاول مرة أخرى.','error');
+      setLoading(false);
+    });
+  }
+
+  if(auth.currentUser){
+    submitComment();
+  }else{
+    auth.signInAnonymously().then(function(){
+      submitComment();
+    }).catch(function(){
+      setLoading(false);
+      showMsg('حدث خطأ في المصادقة. حاول مرة أخرى.','error');
+    });
+  }
 });
 
 /* ═══════════════════════════════════════════════

@@ -1,13 +1,14 @@
 /* ═══════════════════════════════════════
-   Auth Module - Login / Logout
+   Auth Module - Login + Admin Verification
+   Firebase Auth → UID → admins/{uid} → role check
    ═══════════════════════════════════════ */
 (function(){
 'use strict';
 
-firebase.initializeApp(firebaseConfig);
+try{firebase.initializeApp(firebaseConfig)}catch(e){}
 var auth = firebase.auth();
+var db = firebase.firestore();
 
-/* ── Login ── */
 var form     = document.getElementById('loginForm');
 var emailIn  = document.getElementById('email');
 var passIn   = document.getElementById('password');
@@ -28,6 +29,14 @@ function setLoading(on){
   if(loginLdr)loginLdr.style.display=on?'inline-block':'none';
 }
 
+function checkAdminDoc(user){
+  return db.collection('admins').doc(user.uid).get()
+    .then(function(doc){
+      if(doc.exists && doc.data().role === 'admin') return true;
+      return false;
+    });
+}
+
 if(form)form.addEventListener('submit',function(e){
   e.preventDefault();
   hideError();
@@ -35,13 +44,16 @@ if(form)form.addEventListener('submit',function(e){
   var pass=passIn.value;
   if(!email||!pass){showError('يرجى ملء جميع الحقول');return}
   setLoading(true);
+
   auth.signInWithEmailAndPassword(email,pass)
     .then(function(cred){
-      if(cred.user.email!==ADMIN_EMAIL){
-        showError('هذا الحساب غير مخول بالدخول');
-        return auth.signOut();
-      }
-      window.location.href='dashboard.html';
+      return checkAdminDoc(cred.user).then(function(isAdmin){
+        if(!isAdmin){
+          showError('هذا الحساب غير مخول بالدخول');
+          return auth.signOut();
+        }
+        window.location.href='dashboard.html';
+      });
     })
     .catch(function(err){
       setLoading(false);
@@ -53,10 +65,12 @@ if(form)form.addEventListener('submit',function(e){
     });
 });
 
-/* ── If already logged in, redirect to dashboard ── */
+/* If already logged in + admin, redirect to dashboard */
 auth.onAuthStateChanged(function(user){
-  if(user && user.email===ADMIN_EMAIL && window.location.pathname.indexOf('login')>-1){
-    window.location.href='dashboard.html';
+  if(user && window.location.pathname.indexOf('login')>-1){
+    checkAdminDoc(user).then(function(isAdmin){
+      if(isAdmin) window.location.href='dashboard.html';
+    });
   }
 });
 

@@ -1,22 +1,27 @@
 /* ═══════════════════════════════════════
    Dashboard - Comments, Images, Company Data
    Full CRUD + Stats + Filters + Edit Modal
+   Auth: Firebase Auth → UID → admins/{uid} → role
    ═══════════════════════════════════════ */
 (function(){
 'use strict';
 
-firebase.initializeApp(firebaseConfig);
+try{firebase.initializeApp(firebaseConfig)}catch(e){}
 var auth    = firebase.auth();
 var db      = firebase.firestore();
 var storage = firebase.storage();
 
-/* ── Auth Guard ── */
+/* ── Auth Guard: verify admin via admins collection ── */
 auth.onAuthStateChanged(function(user){
-  if(!user||user.email!==ADMIN_EMAIL){
+  if(!user){
     window.location.href='login.html';
     return;
   }
-  initDashboard();
+  AdminSession.verify(user).then(function(){
+    initDashboard();
+  }).catch(function(){
+    auth.signOut().then(function(){window.location.href='login.html'});
+  });
 });
 
 /* ── Logout ── */
@@ -66,6 +71,7 @@ function initDashboard(){
   loadData();
   initFilters();
   initModal();
+  AdminSession.logAction('dashboard_open');
 }
 
 /* ═══════════════════════════════════════
@@ -230,6 +236,7 @@ function approveComment(id){
     approvedAt:firebase.firestore.FieldValue.serverTimestamp()
   }).then(function(){
     toast('تمت الموافقة على التعليق','success');
+    AdminSession.logAction('comment_approve', id);
     loadComments();
     loadAllStats();
   }).catch(function(){toast('خطأ في الموافقة','error')});
@@ -242,6 +249,7 @@ function rejectComment(id){
     rejectedAt:firebase.firestore.FieldValue.serverTimestamp()
   }).then(function(){
     toast('تم رفض التعليق','success');
+    AdminSession.logAction('comment_reject', id);
     loadComments();
     loadAllStats();
   }).catch(function(){toast('خطأ في الرفض','error')});
@@ -252,6 +260,7 @@ function deleteComment(id){
   db.collection('comments').doc(id).delete()
     .then(function(){
       toast('تم حذف التعليق','success');
+      AdminSession.logAction('comment_delete', id);
       allCommentsData=allCommentsData.filter(function(c){return c.id!==id});
       renderComments();
       loadAllStats();
@@ -353,6 +362,7 @@ function saveEdit(){
   db.collection('comments').doc(editingCommentId).update(updateData)
     .then(function(){
       toast('تم حفظ التعديلات بنجاح','success');
+      AdminSession.logAction('comment_edit', editingCommentId);
       closeModal();
       loadComments();
       loadAllStats();
@@ -415,7 +425,7 @@ function bindImageActions(){
 }
 
 /* Upload */
-if(uploadZone){
+if(uploadZone&&uploadInput){
   uploadZone.addEventListener('click',function(){uploadInput.click()});
   uploadZone.addEventListener('dragover',function(e){e.preventDefault();this.classList.add('dragover')});
   uploadZone.addEventListener('dragleave',function(){this.classList.remove('dragover')});
@@ -445,6 +455,7 @@ function uploadFile(file){
     });
   }).then(function(){
     toast('تم رفع الصورة بنجاح','success');
+    AdminSession.logAction('image_upload', file.name);
     loadImages();
     if(uploadInput)uploadInput.value='';
   }).catch(function(){toast('خطأ في رفع الصورة','error')});
@@ -459,6 +470,7 @@ function deleteImage(id,storagePath){
   batch.commit().then(function(){
     if(storagePath){storage.ref(storagePath).delete().catch(function(){})}
     toast('تم حذف الصورة','success');
+    AdminSession.logAction('image_delete', id);
     loadImages();
   }).catch(function(){toast('خطأ في الحذف','error')});
 }
@@ -487,6 +499,7 @@ function replaceImage(id,file){
     });
   }).then(function(){
     toast('تم استبدال الصورة','success');
+    AdminSession.logAction('image_replace', id);
     loadImages();
   }).catch(function(){toast('خطأ في الاستبدال','error')});
 }
@@ -528,6 +541,7 @@ if(dataForm)dataForm.addEventListener('submit',function(e){
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   },{merge:true}).then(function(){
     toast('تم حفظ البيانات بنجاح','success');
+    AdminSession.logAction('settings_update');
     if(btn)btn.disabled=false;
   }).catch(function(){
     toast('خطأ في الحفظ','error');

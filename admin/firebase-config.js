@@ -1,16 +1,13 @@
 /* ═══════════════════════════════════════
    Firebase Configuration
-   Replace with your own Firebase project config
+   barakat-al-manasik project
    ═══════════════════════════════════════ */
 
 const firebaseConfig = {
-  apiKey:            "YOUR_API_KEY",
-  authDomain:        "YOUR_PROJECT.firebaseapp.com",
-  projectId:         "YOUR_PROJECT_ID",
-  storageBucket:     "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId:             "YOUR_APP_ID"
+  apiKey:            "AIzaSyD3nB9ZJdl0nunwcLY3Tvy04sbl1v-VnrE",
+  authDomain:        "barakat-al-manasik.firebaseapp.com",
+  projectId:         "barakat-al-manasik",
+  storageBucket:     "barakat-al-manasik.firebasestorage.app",
+  messagingSenderId: "320884563902",
+  appId:             "1:320884563902:web:e811a2ca40234d698ee3ef"
 };
-
-/* ── Admin Email (the only account that can log in) ── */
-const ADMIN_EMAIL = "admin@barakatalmanasik.com";
