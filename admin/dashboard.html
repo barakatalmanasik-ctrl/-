@@ -33,7 +33,7 @@
 <!-- Dashboard Body -->
 <main class="dash-body">
 
-  <!-- ═══ Stats Row ═══ -->
+  <!-- ═══ Enhanced Stats Row (7 cards) ═══ -->
   <div class="stats-row">
     <div class="stat-card stat-total">
       <div class="stat-icon">
@@ -42,15 +42,6 @@
       <div class="stat-info">
         <div class="stat-num" id="statTotal">0</div>
         <div class="stat-label">إجمالي التعليقات</div>
-      </div>
-    </div>
-    <div class="stat-card stat-pending-card">
-      <div class="stat-icon stat-icon-pending">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      </div>
-      <div class="stat-info">
-        <div class="stat-num" id="statPending">0</div>
-        <div class="stat-label">معلّقة</div>
       </div>
     </div>
     <div class="stat-card stat-approved-card">
@@ -62,13 +53,13 @@
         <div class="stat-label">معتمدة</div>
       </div>
     </div>
-    <div class="stat-card stat-rejected-card">
-      <div class="stat-icon stat-icon-rejected">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    <div class="stat-card stat-pending-card">
+      <div class="stat-icon stat-icon-pending">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       </div>
       <div class="stat-info">
-        <div class="stat-num" id="statRejected">0</div>
-        <div class="stat-label">مرفوضة</div>
+        <div class="stat-num" id="statPending">0</div>
+        <div class="stat-label">معلّقة</div>
       </div>
     </div>
     <div class="stat-card stat-avg-card">
@@ -79,6 +70,33 @@
         <div class="stat-num"><span id="statAvg">0.0</span> <span class="stat-avg-label">/ 5</span></div>
         <div class="stat-label">متوسط التقييم</div>
         <div id="statAvgStars" class="stat-avg-stars"></div>
+      </div>
+    </div>
+    <div class="stat-card stat-services-card">
+      <div class="stat-icon stat-icon-services">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-num" id="statServices">0</div>
+        <div class="stat-label">الخدمات</div>
+      </div>
+    </div>
+    <div class="stat-card stat-gallery-card">
+      <div class="stat-icon stat-icon-gallery">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-num" id="statGallery">0</div>
+        <div class="stat-label">المعرض</div>
+      </div>
+    </div>
+    <div class="stat-card stat-trips-card">
+      <div class="stat-icon stat-icon-trips">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+      </div>
+      <div class="stat-info">
+        <div class="stat-num" id="statTrips">0</div>
+        <div class="stat-label">الرحلات</div>
       </div>
     </div>
   </div>
@@ -94,7 +112,6 @@
         </h2>
       </div>
       <div class="admin-card-body">
-        <!-- Tabs -->
         <div class="tabs">
           <button class="tab-btn" data-filter="all">الكل <span class="tab-badge" id="badgeAll">0</span></button>
           <button class="tab-btn active" data-filter="pending">معلّق <span class="tab-badge tab-badge-pending" id="badgePending">0</span></button>
@@ -126,7 +143,163 @@
       </div>
     </div>
 
-    <!-- ═══ 3. Company Data Card ═══ -->
+    <!-- ═══ 3. Services CMS Card ═══ -->
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h2>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          إدارة الخدمات
+        </h2>
+        <button class="cms-add-btn" id="addServiceBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          إضافة خدمة
+        </button>
+      </div>
+      <div class="admin-card-body">
+        <form class="cms-form" id="serviceForm" style="display:none">
+          <input type="hidden" id="svcEditId" value="">
+          <div class="data-row">
+            <div class="data-field"><label>عنوان الخدمة</label><input type="text" id="svcTitle" placeholder="حجوزات الطيران" required></div>
+            <div class="data-field"><label>الأيقونة</label>
+              <select id="svcIcon">
+                <option value="flight">طيران</option>
+                <option value="umrah">عمرة/حج</option>
+                <option value="visa">تأشيرة</option>
+                <option value="hotel">فندق</option>
+                <option value="transport">نقل بري</option>
+                <option value="default">عام</option>
+              </select>
+            </div>
+          </div>
+          <div class="data-field"><label>الوصف</label><textarea id="svcDesc" rows="2" placeholder="وصف مختصر للخدمة"></textarea></div>
+          <div class="data-row">
+            <div class="data-field"><label>رابط واتساب (اختياري)</label><input type="url" id="svcWhatsapp" placeholder="https://wa.me/9647744641155"></div>
+            <div class="data-field"><label>نص الحجز</label><input type="text" id="svcBookingText" placeholder="أرغب بالاستفسار عن حجز طيران"></div>
+          </div>
+          <div class="data-row">
+            <div class="data-field"><label>الترتيب</label><input type="number" id="svcOrder" value="0" min="0"></div>
+            <div class="data-field"><label>الحالة</label>
+              <select id="svcStatus"><option value="active">نشط</option><option value="inactive">غير نشط</option></select>
+            </div>
+          </div>
+          <div class="cms-form-actions">
+            <button type="button" class="modal-btn modal-btn-cancel" onclick="document.getElementById('serviceForm').style.display='none'">إلغاء</button>
+            <button type="button" class="modal-btn cms-preview-btn" id="svcPreviewBtn">معاينة</button>
+            <button type="submit" class="modal-btn modal-btn-save">حفظ</button>
+          </div>
+        </form>
+        <div class="comment-list" id="serviceList">
+          <div class="comment-empty">جاري التحميل...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ 4. Gallery CMS Card ═══ -->
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h2>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          إدارة المعرض
+        </h2>
+        <button class="cms-add-btn" id="addGalleryBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          إضافة صورة
+        </button>
+      </div>
+      <div class="admin-card-body">
+        <form class="cms-form" id="galleryForm" style="display:none">
+          <input type="hidden" id="galEditId" value="">
+          <div class="data-row">
+            <div class="data-field"><label>العنوان</label><input type="text" id="galTitle" placeholder="عنوان الصورة"></div>
+            <div class="data-field"><label>الترتيب</label><input type="number" id="galOrder" value="0" min="0"></div>
+          </div>
+          <div class="data-field"><label>الوصف (اختياري)</label><input type="text" id="galDesc" placeholder="وصف مختصر"></div>
+          <div class="data-field">
+            <label>الصورة</label>
+            <div class="upload-zone upload-zone-sm" id="galUploadZone">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <p>اسحب الصورة هنا أو انقر</p>
+              <input type="file" id="galUploadInput" class="upload-input" accept="image/*">
+            </div>
+            <img id="galPreview" class="gal-preview-img" style="display:none" alt="معاينة">
+          </div>
+          <div class="data-row">
+            <div class="data-field"><label>رابط الصورة (بديل للرفع)</label><input type="url" id="galImageUrl" placeholder="https://..."></div>
+            <div class="data-field"><label>الحالة</label>
+              <select id="galStatus"><option value="active">نشط</option><option value="inactive">غير نشط</option></select>
+            </div>
+          </div>
+          <div class="cms-form-actions">
+            <button type="button" class="modal-btn modal-btn-cancel" onclick="document.getElementById('galleryForm').style.display='none'">إلغاء</button>
+            <button type="submit" class="modal-btn modal-btn-save">حفظ</button>
+          </div>
+        </form>
+        <div class="img-grid" id="galleryList"></div>
+      </div>
+    </div>
+
+    <!-- ═══ 5. Trips CMS Card ═══ -->
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h2>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+          إدارة الرحلات
+        </h2>
+        <button class="cms-add-btn" id="addTripBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          إضافة رحلة
+        </button>
+      </div>
+      <div class="admin-card-body">
+        <form class="cms-form" id="tripForm" style="display:none">
+          <input type="hidden" id="tripEditId" value="">
+          <div class="data-row">
+            <div class="data-field"><label>اسم الرحلة</label><input type="text" id="tripName" placeholder="عمرة رمضان 2026" required></div>
+            <div class="data-field"><label>المدة</label><input type="text" id="tripDuration" placeholder="10 أيام"></div>
+          </div>
+          <div class="data-row">
+            <div class="data-field"><label>تاريخ الانطلاق</label><input type="text" id="tripDate" placeholder="2026-03-01"></div>
+            <div class="data-field"><label>السعر</label><input type="text" id="tripPrice" placeholder="1,500,000 د.ع"></div>
+          </div>
+          <div class="data-row">
+            <div class="data-field"><label>الفندق</label><input type="text" id="tripHotel" placeholder="فندق 5 نجوم"></div>
+            <div class="data-field"><label>المقاعد المتبقية</label><input type="number" id="tripSeats" value="0" min="0"></div>
+          </div>
+          <div class="data-field"><label>البرنامج</label><textarea id="tripProgram" rows="2" placeholder="وصف البرنامج اليومي..."></textarea></div>
+          <div class="data-field">
+            <label>صورة الرحلة</label>
+            <div class="upload-zone upload-zone-sm" id="tripUploadZone">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <p>اسحب الصورة هنا أو انقر</p>
+              <input type="file" id="tripUploadInput" class="upload-input" accept="image/*">
+            </div>
+            <img id="tripPreview" class="gal-preview-img" style="display:none" alt="معاينة">
+          </div>
+          <div class="data-row">
+            <div class="data-field"><label>رابط الصورة (بديل)</label><input type="url" id="tripImageUrl" placeholder="https://..."></div>
+            <div class="data-field"><label>حالة الرحلة</label>
+              <select id="tripTripStatus"><option value="available">متاح</option><option value="full">مكتمل</option><option value="unavailable">غير متاح</option></select>
+            </div>
+          </div>
+          <div class="data-row">
+            <div class="data-field"><label>الترتيب</label><input type="number" id="tripOrder" value="0" min="0"></div>
+            <div class="data-field"><label>الحالة</label>
+              <select id="tripStatus"><option value="active">نشط</option><option value="inactive">غير نشط</option></select>
+            </div>
+          </div>
+          <div class="cms-form-actions">
+            <button type="button" class="modal-btn modal-btn-cancel" onclick="document.getElementById('tripForm').style.display='none'">إلغاء</button>
+            <button type="button" class="modal-btn cms-preview-btn" id="tripPreviewBtn">معاينة</button>
+            <button type="submit" class="modal-btn modal-btn-save">حفظ</button>
+          </div>
+        </form>
+        <div class="comment-list" id="tripList">
+          <div class="comment-empty">جاري التحميل...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ 6. Company Data Card ═══ -->
     <div class="admin-card">
       <div class="admin-card-header">
         <h2>
@@ -137,34 +310,16 @@
       <div class="admin-card-body">
         <form class="data-form" id="dataForm">
           <div class="data-row">
-            <div class="data-field">
-              <label>رقم الهاتف الرئيسي</label>
-              <input type="text" id="phone1" placeholder="07744641155">
-            </div>
-            <div class="data-field">
-              <label>رقم الهاتف الثاني</label>
-              <input type="text" id="phone2" placeholder="07712441233">
-            </div>
+            <div class="data-field"><label>رقم الهاتف الرئيسي</label><input type="text" id="phone1" placeholder="07744641155"></div>
+            <div class="data-field"><label>رقم الهاتف الثاني</label><input type="text" id="phone2" placeholder="07712441233"></div>
           </div>
           <div class="data-row">
-            <div class="data-field">
-              <label>رقم خدمة الزبائن</label>
-              <input type="text" id="phone3" placeholder="07801733892">
-            </div>
-            <div class="data-field">
-              <label>ساعات العمل</label>
-              <input type="text" id="hours" placeholder="يومياً من 8:00 صباحاً حتى 10:00 مساءً">
-            </div>
+            <div class="data-field"><label>رقم خدمة الزبائن</label><input type="text" id="phone3" placeholder="07801733892"></div>
+            <div class="data-field"><label>ساعات العمل</label><input type="text" id="hours" placeholder="يومياً من 8:00 صباحاً حتى 10:00 مساءً"></div>
           </div>
           <div class="data-row">
-            <div class="data-field">
-              <label>العنوان</label>
-              <input type="text" id="address" placeholder="كربلاء المقدسة – قضاء الحر">
-            </div>
-            <div class="data-field">
-              <label>رابط انستغرام</label>
-              <input type="url" id="instagram" placeholder="https://www.instagram.com/barakat_almanasik">
-            </div>
+            <div class="data-field"><label>العنوان</label><input type="text" id="address" placeholder="كربلاء المقدسة – قضاء الحر"></div>
+            <div class="data-field"><label>رابط انستغرام</label><input type="url" id="instagram" placeholder="https://www.instagram.com/barakat_almanasik"></div>
           </div>
           <div class="data-field">
             <label>نبذة عن الشركة</label>
@@ -224,6 +379,19 @@
         <button type="submit" class="modal-btn modal-btn-save">حفظ التعديلات</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- ═══ Preview Modal ═══ -->
+<div class="modal-overlay" id="previewModal">
+  <div class="modal-card modal-card-preview">
+    <div class="modal-header">
+      <h3>معاينة</h3>
+      <button class="modal-close" id="previewCloseBtn" aria-label="إغلاق">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="previewBody"></div>
   </div>
 </div>
 

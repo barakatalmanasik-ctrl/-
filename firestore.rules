@@ -106,6 +106,24 @@ service cloud.firestore {
     }
 
     /* ═══════════════════════════════════════
+       GALLERY COLLECTION
+       Public read, admin write
+       ═══════════════════════════════════════ */
+    match /gallery/{galleryId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /* ═══════════════════════════════════════
+       TRIPS COLLECTION
+       Public read (active only), admin read/write all
+       ═══════════════════════════════════════ */
+    match /trips/{tripId} {
+      allow read: if resource.data.status == 'active' || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    /* ═══════════════════════════════════════
        OFFERS COLLECTION (future expansion)
        Public read, admin write
        ═══════════════════════════════════════ */

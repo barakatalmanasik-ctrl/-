@@ -50,6 +50,8 @@
         <li><a href="#home" class="nav-link active">الرئيسية</a></li>
         <li><a href="#about" class="nav-link">من نحن</a></li>
         <li><a href="#services" class="nav-link">الخدمات</a></li>
+        <li><a href="#gallery" class="nav-link">المعرض</a></li>
+        <li><a href="#trips" class="nav-link">الرحلات</a></li>
         <li><a href="#why-us" class="nav-link">لماذا نحن</a></li>
         <li><a href="#testimonials" class="nav-link">آراء العملاء</a></li>
         <li><a href="#contact" class="nav-link">تواصل معنا</a></li>
@@ -182,7 +184,7 @@
       <h2 class="sec-title">خدماتنا المتميزة</h2>
       <p class="sec-sub">نقدم مجموعة شاملة من الخدمات السياحية لتلبية جميع احتياجاتكم</p>
     </div>
-    <div class="svc-grid">
+    <div class="svc-grid" id="servicesGrid">
       <!-- Flight -->
       <div class="svc-card" data-anim="fade-up" data-delay="100">
         <div class="svc-ic-wrap">
@@ -346,41 +348,10 @@
       <h2 class="sec-title">ماذا يقول عملاؤنا</h2>
       <p class="sec-sub">نفخر بثقة عملائنا ورضاهم عن خدماتنا</p>
     </div>
+    <!-- Rating Summary -->
+    <div class="testi-summary" id="testiSummary" data-anim="fade-up"></div>
     <div class="testi-wrap" data-anim="fade-up">
-      <div class="testi-track" id="testiTrack">
-        <div class="testi-card">
-          <div class="testi-stars"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-          <p class="testi-txt">"تجربة ممتازة مع شركة بركات المناسك. الحجز كان سريعاً والخدمة كانت احترافية من البداية للنهاية. أنصح الجميع بالتعامل معهم."</p>
-          <div class="testi-author">
-            <div class="testi-av">م</div>
-            <div class="testi-info"><h4>محمد علي</h4><span>عميل - العمرة</span></div>
-          </div>
-        </div>
-        <div class="testi-card">
-          <div class="testi-stars"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-          <p class="testi-txt">"حجزت رحلة عائلية للعمرة من خلالهم وكانت رحلة رائعة. الأسعار مناسبة والفنادق ممتازة. شكراً لكم."</p>
-          <div class="testi-author">
-            <div class="testi-av">ف</div>
-            <div class="testi-info"><h4>فاطمة حسين</h4><span>عميلة - العمرة العائلية</span></div>
-          </div>
-        </div>
-        <div class="testi-card">
-          <div class="testi-stars"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-          <p class="testi-txt">"خدمة ممتازة وسرعة في إصدار التأشيرة. الفريق محترف ومتعاون جداً. بارك الله فيكم."</p>
-          <div class="testi-author">
-            <div class="testi-av">ع</div>
-            <div class="testi-info"><h4>عبدالرحمن محمود</h4><span>عميل - التأشيرات</span></div>
-          </div>
-        </div>
-        <div class="testi-card">
-          <div class="testi-stars"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-          <p class="testi-txt">"أفضل شركة سياحة تعاملت معها في العراق. الحجوزات مضمونة والأسعار أحسن من السوق. شكراً بركات المناسك."</p>
-          <div class="testi-author">
-            <div class="testi-av">س</div>
-            <div class="testi-info"><h4>سارة أحمد</h4><span>عميلة - حجز طيران</span></div>
-          </div>
-        </div>
-      </div>
+      <div class="testi-track" id="testiTrack"></div>
       <div class="testi-nav">
         <button class="testi-btn" id="testiPrev" aria-label="السابق"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
         <div class="testi-dots" id="testiDots"></div>
@@ -411,6 +382,36 @@
         <p id="cMsg" class="cf-msg"></p>
       </form>
     </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section id="gallery" class="section" role="region" aria-label="معرض الصور">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <span class="sec-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        معرض الصور
+      </span>
+      <h2 class="sec-title">معرض صورنا</h2>
+      <p class="sec-sub"> مجموعة من صور أنشطتنا ورحلاتنا وخدماتنا</p>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</section>
+
+<!-- Trips -->
+<section id="trips" class="section" style="background:var(--off)" role="region" aria-label="رحلاتنا">
+  <div class="container">
+    <div class="section-header" data-anim="fade-up">
+      <span class="sec-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+        رحلاتنا
+      </span>
+      <h2 class="sec-title">رحلاتنا القادمة</h2>
+      <p class="sec-sub">اكتشف رحلاتنا المميزة واحجز مقعدك الآن</p>
+    </div>
+    <div class="trips-grid" id="tripsGrid"></div>
   </div>
 </section>
 
@@ -507,7 +508,7 @@
       </div>
       <div class="footer-col">
         <h3>روابط سريعة</h3>
-        <ul><li><a href="#home">الرئيسية</a></li><li><a href="#about">من نحن</a></li><li><a href="#services">الخدمات</a></li><li><a href="#why-us">لماذا نحن</a></li><li><a href="#contact">تواصل معنا</a></li></ul>
+        <ul><li><a href="#home">الرئيسية</a></li><li><a href="#about">من نحن</a></li><li><a href="#services">الخدمات</a></li><li><a href="#gallery">المعرض</a></li><li><a href="#trips">الرحلات</a></li><li><a href="#why-us">لماذا نحن</a></li><li><a href="#contact">تواصل معنا</a></li></ul>
       </div>
       <div class="footer-col">
         <h3>خدماتنا</h3>
@@ -541,11 +542,29 @@
   </button>
 </div>
 
+<!-- Read More Modal -->
+<div class="rm-overlay" id="readMoreModal">
+  <div class="rm-card">
+    <button class="rm-close" aria-label="إغلاق">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="rm-stars"></div>
+    <p class="rm-text"></p>
+    <div class="rm-author">
+      <div class="rm-name"></div>
+      <div class="rm-label"></div>
+    </div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="admin/firebase-config.js"></script>
 <script src="comments.js"></script>
+<script src="services.js"></script>
+<script src="gallery.js"></script>
+<script src="trips.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 /**
  * بركات المناسك - Premium Script
  * Vanilla JS | No Dependencies
+ * Auto-carousel 7s · Touch · Read-More Modal
  */
 (function(){
 'use strict';
@@ -87,6 +88,11 @@ function animateOnScroll(){
 window.addEventListener('scroll',animateOnScroll,{passive:true});
 window.addEventListener('load',function(){setTimeout(animateOnScroll,200)});
 
+window.reinitAnimations=function(){
+  animEls=document.querySelectorAll('[data-anim]');
+  animateOnScroll();
+};
+
 /* === Counters === */
 var counters=document.querySelectorAll('[data-count]');
 var counted=false;
@@ -114,31 +120,30 @@ function animateCounters(){
 window.addEventListener('scroll',animateCounters,{passive:true});
 window.addEventListener('load',function(){setTimeout(animateCounters,400)});
 
-/* === Testimonials Slider === */
+/* ═══════════════════════════════════════
+   Testimonials Carousel - One card at a time
+   Auto-rotate 7s · Touch · Dots · Nav
+   ═══════════════════════════════════════ */
 var track=document.getElementById('testiTrack');
 var prevBtn=document.getElementById('testiPrev');
 var nextBtn=document.getElementById('testiNext');
 var dotsWrap=document.getElementById('testiDots');
-var curSlide=0,perView=3,autoInt=null;
+var curSlide=0,autoInt=null;
+var AUTO_INTERVAL=7000;
 
 function initTesti(){
   if(!track)return;
-  updatePerView();
   buildDots();
   updateSlide();
   startAuto();
 }
 
-function updatePerView(){
-  var w=window.innerWidth;
-  perView=w>=1024?3:w>=768?2:1;
-}
-
 function buildDots(){
   if(!dotsWrap)return;
   dotsWrap.innerHTML='';
-  var n=Math.max(1,track.children.length-perView+1);
-  for(var i=0;i<n;i++){
+  var total=track.children.length;
+  if(total<=1)return;
+  for(var i=0;i<total;i++){
     var d=document.createElement('div');
     d.className='testi-dot'+(i===0?' on':'');
     d.setAttribute('role','button');
@@ -153,18 +158,27 @@ function updateSlide(){
   if(!track)return;
   var cards=track.children;
   if(!cards.length)return;
-  var cw=cards[0].offsetWidth+20;
-  var max=Math.max(0,cards.length-perView);
-  curSlide=Math.min(curSlide,max);
-  track.style.transform='translateX('+(curSlide*cw)+'px)';
+  var cw=cards[0].offsetWidth;
+  var gap=20;
+  var total=cards.length;
+  curSlide=Math.min(curSlide,Math.max(0,total-1));
+  track.style.transform='translateX('+(curSlide*(cw+gap))+'px)';
   var dots=dotsWrap?dotsWrap.children:[];
   for(var i=0;i<dots.length;i++)dots[i].classList.toggle('on',i===curSlide);
 }
 
 function goTo(i){curSlide=i;updateSlide()}
-function next(){var mx=Math.max(0,track.children.length-perView);curSlide=curSlide>=mx?0:curSlide+1;updateSlide()}
-function prev(){var mx=Math.max(0,track.children.length-perView);curSlide=curSlide<=0?mx:curSlide-1;updateSlide()}
-function startAuto(){stopAuto();autoInt=setInterval(next,5000)}
+function next(){
+  var total=track.children.length;
+  curSlide=curSlide>=total-1?0:curSlide+1;
+  updateSlide();
+}
+function prev(){
+  var total=track.children.length;
+  curSlide=curSlide<=0?total-1:curSlide-1;
+  updateSlide();
+}
+function startAuto(){stopAuto();autoInt=setInterval(next,AUTO_INTERVAL)}
 function stopAuto(){if(autoInt){clearInterval(autoInt);autoInt=null}}
 function resetAuto(){stopAuto();startAuto()}
 
@@ -183,9 +197,9 @@ if(track){
   },{passive:true});
 }
 
-window.addEventListener('resize',function(){updatePerView();buildDots();updateSlide()});
+window.addEventListener('resize',function(){buildDots();updateSlide()});
 window.addEventListener('load',function(){setTimeout(initTesti,200)});
-window.reinitTesti=function(){updatePerView();buildDots();curSlide=0;updateSlide();startAuto()};
+window.reinitTesti=function(){buildDots();curSlide=0;updateSlide();startAuto()};
 
 /* === Scroll To Top === */
 var topBtn=document.getElementById('scrollTopBtn');
