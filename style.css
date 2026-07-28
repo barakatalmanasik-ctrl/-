@@ -113,31 +113,11 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 .btn-ghost{background:rgba(255,255,255,.1);color:var(--white);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .btn-ghost:hover{background:rgba(255,255,255,.18)}
 
-/* ── Hero ── */
-.hero{position:relative;min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--navy-deep)}
-.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transform:scale(1.05);animation:heroBgZoom 12s ease-out forwards;background-image:linear-gradient(135deg,var(--navy-deep) 0%,var(--navy) 30%,var(--navy-light) 70%,var(--navy-deep) 100%)}
-@keyframes heroBgZoom{0%{transform:scale(1.08)}100%{transform:scale(1.05)}}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(17,29,53,.85) 0%,rgba(27,42,74,.7) 40%,rgba(17,29,53,.8) 100%)}
-.hero-content{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;animation:heroContentFade 1.2s ease-out 0.3s both}
-@keyframes heroContentFade{0%{opacity:0;transform:translateY(24px)}100%{opacity:1;transform:translateY(0)}}
-.hero-logo-wrap{width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.1);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:2.5px solid var(--gold);display:flex;align-items:center;justify-content:center;margin-bottom:24px;box-shadow:0 0 30px rgba(201,169,110,.25),0 0 60px rgba(201,169,110,.1);animation:heroLogoIn 1s cubic-bezier(.34,1.56,.64,1) forwards;transition:transform .4s var(--ease-bounce)}
-.hero-logo-wrap:hover{transform:scale(1.05);box-shadow:0 0 40px rgba(201,169,110,.35),0 0 80px rgba(201,169,110,.15)}
-@keyframes heroLogoIn{0%{transform:scale(0);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
-.hero-logo{width:62px;height:62px;object-fit:contain;user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none;pointer-events:none}
-.hero-title{font-family:var(--h);font-size:clamp(28px,4.5vw,50px);font-weight:800;color:var(--white);line-height:1.35;margin-bottom:8px;text-shadow:0 2px 24px rgba(0,0,0,.2);letter-spacing:-.3px}
-.hero-tagline{font-size:clamp(17px,2.2vw,24px);color:var(--gold-l);font-weight:600;margin-bottom:4px;text-shadow:0 1px 12px rgba(0,0,0,.15)}
-.hero-tagline-sub{font-size:clamp(13px,1.4vw,16px);color:rgba(255,255,255,.5);max-width:580px;line-height:1.85;margin-bottom:32px}
-.hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:0}
-.hero .btn-primary{background:var(--gold);color:var(--navy-deep);box-shadow:0 4px 20px rgba(201,169,110,.3)}
-.hero .btn-primary:hover{background:#dbb97a;transform:translateY(-3px);box-shadow:0 8px 32px rgba(201,169,110,.4)}
-.hero .btn-accent{background:var(--emerald);color:var(--white);box-shadow:0 4px 20px rgba(16,185,129,.25)}
-.hero .btn-accent:hover{background:var(--emerald-d);transform:translateY(-3px);box-shadow:0 8px 32px rgba(16,185,129,.35)}
-.hero .btn-outline{background:rgba(255,255,255,.06);color:var(--white);border:1.5px solid rgba(255,255,255,.25);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.1)}
-.hero .btn-outline:hover{background:rgba(255,255,255,.14);border-color:var(--gold-l);transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.15)}
-.hero-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:1;opacity:.7}
-.hs-line{width:1px;height:40px;background:rgba(255,255,255,.15);position:relative;overflow:hidden}
-.hs-line::after{content:'';position:absolute;top:-100%;width:100%;height:50%;background:var(--gold);animation:hscroll 2.4s ease-in-out infinite}
-@keyframes hscroll{0%{top:-50%}100%{top:150%}}
+/* ── Hero Banner ── */
+.hero{position:relative;height:50vh;min-height:320px;overflow:hidden;background:var(--navy-deep)}
+.hero-banner{position:absolute;inset:0;overflow:hidden}
+.hero-banner-img{width:100%;height:100%;object-fit:cover;object-position:center 30%;user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none;pointer-events:none}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 65%,rgba(17,29,53,.18) 100%);pointer-events:none}
 
 /* ── Stats Section ── */
 .stats-section{padding:clamp(48px,6vw,80px) 0;background:linear-gradient(180deg,var(--white) 0%,var(--off) 100%);position:relative}
@@ -405,6 +385,7 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 
 /* 768px+ Tablet */
 @media(min-width:768px){
+  .hero{height:70vh;min-height:480px}
   .container{padding:0 32px}
   .stats-grid{grid-template-columns:repeat(4,1fr)}
   .stat-item{padding:clamp(24px,3vw,36px) 24px}
@@ -426,7 +407,7 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
   .nav-toggle{display:none!important}
   .nav-menu{display:flex!important}
   .nav-overlay{display:none}
-  .hero-title{font-size:clamp(34px,4.5vw,50px)}
+  .hero{height:70vh;min-height:480px}
   .svc-grid{grid-template-columns:repeat(3,1fr)}
   .why-grid{grid-template-columns:repeat(4,1fr)}
   .why-card{padding:36px 24px;flex-direction:column;align-items:center;text-align:center}
@@ -442,8 +423,7 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 /* 320px Small Mobile */
 @media(max-width:374px){
   .container{padding:0 16px}
-  .hero-btns{flex-direction:column}
-  .hero-btns .btn{width:100%;justify-content:center}
+  .hero{height:50vh;min-height:320px}
   .testi-card{padding:24px 20px}
   .testi-txt{font-size:14px}
   .comment-form-wrap{padding:0 8px}
@@ -475,7 +455,7 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
   [data-anim]{opacity:1;transform:none}
 }
 a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--navy);outline-offset:3px;border-radius:4px}
-@media print{.nav,.floating,.preloader,.hero-scroll,.nav-overlay{display:none!important}.hero{min-height:auto;padding:30px 0}.section{padding:16px 0;break-inside:avoid}}
+@media print{.nav,.floating,.preloader,.nav-overlay{display:none!important}.hero{height:auto;min-height:0;padding:30px 0}.section{padding:16px 0;break-inside:avoid}}
 
 /* ═══════════════════════════════════════════════
    Lightbox / Gallery Preview
