@@ -115,7 +115,7 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 
 /* ── Hero ── */
 .hero{position:relative;min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--navy-deep)}
-.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transform:scale(1.05);animation:heroBgZoom 12s ease-out forwards}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transform:scale(1.05);animation:heroBgZoom 12s ease-out forwards;background-image:linear-gradient(135deg,var(--navy-deep) 0%,var(--navy) 30%,var(--navy-light) 70%,var(--navy-deep) 100%)}
 @keyframes heroBgZoom{0%{transform:scale(1.08)}100%{transform:scale(1.05)}}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(17,29,53,.85) 0%,rgba(27,42,74,.7) 40%,rgba(17,29,53,.8) 100%)}
 .hero-content{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;animation:heroContentFade 1.2s ease-out 0.3s both}

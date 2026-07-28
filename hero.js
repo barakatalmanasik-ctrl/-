@@ -1,10 +1,12 @@
 (function(){
 'use strict';
 
-try{firebase.initializeApp(firebaseConfig)}catch(e){}
-var db=firebase.firestore();
-
-var DEFAULT_HERO={
+/* ═══════════════════════════════════════
+   DEFAULT VALUES — always shown first,
+   then overridden by Firestore if available.
+   No empty containers ever.
+   ═══════════════════════════════════════ */
+var DEFAULTS={
   bannerImage:'',
   logoImage:'Logo.png',
   companyName:'شركة بركات المناسك<br>للسفر والسياحة والحج والعمرة',
@@ -21,49 +23,39 @@ var DEFAULT_HERO={
   ]
 };
 
-function initHero(){
-  db.collection('settings').doc('hero').get().then(function(doc){
-    if(doc.exists){
-      applyHero(doc.data());
-    }else{
-      applyHero(DEFAULT_HERO);
-    }
-  }).catch(function(){
-    applyHero(DEFAULT_HERO);
-  });
-}
-
+/* ── Apply data to the DOM ── */
 function applyHero(data){
-  var hero=data||DEFAULT_HERO;
+  var h=data||DEFAULTS;
 
   var bg=document.getElementById('heroBg');
-  if(bg&&hero.bannerImage){
-    bg.style.backgroundImage='url("'+hero.bannerImage.replace(/"/g,'')+'")';
+  if(bg){
+    if(h.bannerImage){
+      bg.style.backgroundImage='url("'+h.bannerImage.replace(/"/g,'')+'")';
+    }
   }
 
   var logo=document.getElementById('heroLogo');
-  if(logo&&hero.logoImage){
-    logo.src=hero.logoImage;
-  }
+  if(logo&&h.logoImage)logo.src=h.logoImage;
 
   var cn=document.getElementById('heroCompanyName');
-  if(cn&&hero.companyName)cn.innerHTML=hero.companyName;
-  setText('heroTagline1',hero.tagline1);
-  setText('heroTagline2',hero.tagline2);
+  if(cn&&h.companyName)cn.innerHTML=h.companyName;
 
-  setText('heroBtnPrograms',hero.btn1Text);
+  setText('heroTagline1',h.tagline1);
+  setText('heroTagline2',h.tagline2);
+
+  setText('heroBtnPrograms',h.btn1Text);
   var bp=document.getElementById('heroBtnPrograms');
-  if(bp&&hero.btn1Link)bp.href=hero.btn1Link;
+  if(bp&&h.btn1Link)bp.href=h.btn1Link;
 
-  setText('heroBtnContact',hero.btn2Text);
+  setText('heroBtnContact',h.btn2Text);
   var bc=document.getElementById('heroBtnContact');
-  if(bc&&hero.btn2Link)bc.href=hero.btn2Link;
+  if(bc&&h.btn2Link)bc.href=h.btn2Link;
 
-  setText('heroBtnWhatsapp',hero.btn3Text);
+  setText('heroBtnWhatsapp',h.btn3Text);
   var bw=document.getElementById('heroBtnWhatsapp');
-  if(bw&&hero.btn3Link)bw.href=hero.btn3Link;
+  if(bw&&h.btn3Link)bw.href=h.btn3Link;
 
-  renderStats(hero.stats);
+  renderStats(h.stats);
   observeStats();
 }
 
@@ -72,24 +64,25 @@ function setText(id,val){
   if(el&&val)el.textContent=val;
 }
 
+/* ── Stats ── */
 function renderStats(stats){
   var grid=document.getElementById('statsGrid');
   if(!grid)return;
-  var arr=stats&&stats.length?stats:DEFAULT_HERO.stats;
+  var arr=stats&&stats.length?stats:DEFAULTS.stats;
   var html='';
   arr.forEach(function(s,i){
     var num=s.number||0;
     var suf=s.suffix||'';
     var lbl=s.label||'';
     html+='<div class="stat-item" data-anim="fade-up" data-delay="'+(i*100)+'">'
-      +'<div class="stat-number"><span class="stat-count" data-target="'+num+'">0</span><span class="stat-suffix">'+esc(suf)+'</span></div>'
-      +'<div class="stat-label">'+esc(lbl)+'</div>'
+      +'<div class="stat-number"><span class="stat-count" data-target="'+num+'">0</span><span class="stat-suffix">'+h(suf)+'</span></div>'
+      +'<div class="stat-label">'+h(lbl)+'</div>'
       +'</div>';
   });
   grid.innerHTML=html;
 }
 
-function esc(s){
+function h(s){
   if(typeof s!=='string')return'';
   var d=document.createElement('div');
   d.textContent=s;
@@ -148,11 +141,24 @@ document.addEventListener('DOMContentLoaded',function(){
   });
 });
 
-/* ── Init ── */
+/* ═══════════════════════════════════════
+   INIT — immediate render with defaults,
+   then upgrade with Firestore data.
+   ═══════════════════════════════════════ */
+function init(){
+  applyHero(DEFAULTS);
+  try{
+    var db=firebase.firestore();
+    db.collection('settings').doc('hero').get().then(function(doc){
+      if(doc.exists)applyHero(doc.data());
+    }).catch(function(){});
+  }catch(e){}
+}
+
 if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',initHero);
+  document.addEventListener('DOMContentLoaded',init);
 }else{
-  initHero();
+  init();
 }
 
 })();
