@@ -270,6 +270,32 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 .cf-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
 .cf-msg{text-align:center;font-size:13px;margin-top:10px;display:none;line-height:1.6}
 
+/* ── Program Detail Modal ── */
+.pm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:all .3s var(--ease)}
+.pm-overlay.show{opacity:1;visibility:visible}
+.pm-modal{background:var(--white);border-radius:var(--r-lg);width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:var(--sh-xl);transform:translateY(20px) scale(.97);transition:transform .3s var(--ease);position:relative;direction:rtl}
+.pm-overlay.show .pm-modal{transform:translateY(0) scale(1)}
+.pm-close{position:absolute;top:16px;left:16px;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--g400);transition:all .2s;z-index:2;background:var(--white);border:none;cursor:pointer}
+.pm-close:hover{background:var(--off);color:var(--g800)}
+.pm-header{padding:28px 28px 16px;border-bottom:1px solid var(--br)}
+.pm-title{font-family:var(--h);font-size:22px;font-weight:700;color:var(--g900);margin:0 0 12px}
+.pm-meta{display:flex;gap:20px;flex-wrap:wrap}
+.pm-meta span{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--g500)}
+.pm-meta svg{flex-shrink:0;color:var(--gold)}
+.pm-body{padding:24px 28px;font-size:15px;color:var(--g700);line-height:2}
+.pm-body strong{color:var(--g900);font-weight:700}
+.pm-body br{display:block;content:'';margin:4px 0}
+.pm-footer{padding:16px 28px 24px;border-top:1px solid var(--br);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pm-price{font-size:14px;color:var(--g500);font-weight:500}
+.pm-footer .btn{flex-shrink:0}
+@media(max-width:500px){
+  .pm-body{padding:20px 18px;font-size:14px}
+  .pm-header{padding:20px 18px 14px}
+  .pm-footer{padding:14px 18px 20px;flex-direction:column}
+  .pm-footer .btn{width:100%;justify-content:center}
+  .pm-title{font-size:19px}
+}
+
 /* ── Read More Modal ── */
 .rm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:all .3s var(--ease)}
 .rm-overlay.show{opacity:1;visibility:visible}
