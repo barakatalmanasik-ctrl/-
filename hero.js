@@ -7,17 +7,17 @@ var db=firebase.firestore();
 var DEFAULT_HERO={
   bannerImage:'',
   logoImage:'Logo.png',
-  companyName:'شركة بركات المناسك للسفر والسياحة',
-  tagline1:'أكثر من 22 سنة من الثقة والخبرة في السفر والسياحة',
-  tagline2:'شركة بركات المناسك للسفر والسياحة تقدم خدمات العمرة، حجوزات الطيران، التأشيرات، الفنادق، والنقل البري داخل وخارج العراق.',
-  btn1Text:'برامجنا',btn1Link:'#programs',
+  companyName:'شركة بركات المناسك<br>للسفر والسياحة والحج والعمرة',
+  tagline1:'أكثر من 22 عاماً من الثقة والخبرة',
+  tagline2:'في خدمة المسافرين وضيوف الرحمن.',
+  btn1Text:'برامجنا الحالية',btn1Link:'#programs',
   btn2Text:'تواصل معنا',btn2Link:'#contact',
   btn3Text:'واتساب',btn3Link:'https://wa.me/9647744641155',
   stats:[
     {number:22,suffix:'+',label:'سنة خبرة'},
-    {number:10000,suffix:'+',label:'مسافر'},
-    {number:95,suffix:'%',label:'رضا العملاء'},
-    {number:200,suffix:'+',label:'برنامج سياحي'}
+    {number:10000,suffix:'+',label:'مسافر معنا'},
+    {number:95,suffix:'%',label:'نسبة رضا العملاء'},
+    {number:200,suffix:'+',label:'برنامج تم تنفيذه'}
   ]
 };
 
@@ -46,7 +46,8 @@ function applyHero(data){
     logo.src=hero.logoImage;
   }
 
-  setText('heroCompanyName',hero.companyName);
+  var cn=document.getElementById('heroCompanyName');
+  if(cn&&hero.companyName)cn.innerHTML=hero.companyName;
   setText('heroTagline1',hero.tagline1);
   setText('heroTagline2',hero.tagline2);
 

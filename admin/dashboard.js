@@ -1181,7 +1181,7 @@ function previewHero(){
   var logoHtml=logoImage?'<div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;border:2px solid rgba(255,255,255,.15)"><img src="'+logoImage+'" alt="" style="width:50px;height:50px;object-fit:contain"></div>':'';
   var html='<div '+bgStyle+' style="padding:60px 24px;border-radius:var(--r-lg);text-align:center">'
     +logoHtml
-    +(companyName?'<h3 style="color:var(--white);font-size:24px;margin-bottom:8px">'+esc(companyName)+'</h3>':'')
+    +(companyName?'<h3 style="color:var(--white);font-size:24px;margin-bottom:8px">'+companyName+'</h3>':'')
     +(tagline1?'<p style="color:var(--gold-l);font-size:16px;margin-bottom:4px">'+esc(tagline1)+'</p>':'')
     +(tagline2?'<p style="color:rgba(255,255,255,.55);font-size:13px;margin-bottom:24px">'+esc(tagline2)+'</p>':'')
     +'<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'
