@@ -257,7 +257,61 @@
       </div>
     </div>
 
-    <!-- ═══ 6. Company Data Card ═══ -->
+    <!-- ═══ 6. Hero Settings Card ═══ -->
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h2>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+          إعدادات الواجهة الرئيسية
+        </h2>
+      </div>
+      <div class="admin-card-body">
+        <form class="hero-form" id="heroForm">
+          <h4 class="hero-form-title">الصور والنصوص</h4>
+          <div class="data-row">
+            <div class="data-field"><label>الصورة الرئيسية (رابط)</label><input type="url" id="heroBannerImage" placeholder="https://... banner.jpg"></div>
+            <div class="data-field"><label>شعار الشركة (رابط SVG يفضل)</label><input type="url" id="heroLogoImage" placeholder="https://... logo.svg"></div>
+          </div>
+          <div class="data-row">
+            <div class="data-field"><label>اسم الشركة</label><input type="text" id="heroCompanyName" placeholder="شركة بركات المناسك للسفر والسياحة"></div>
+            <div class="data-field"><label>النص التعريفي الأول</label><input type="text" id="heroTagline1" placeholder="أكثر من 22 سنة من الثقة..."></div>
+          </div>
+          <div class="data-field"><label>النص التعريفي الثاني</label><input type="text" id="heroTagline2" placeholder="شركة بركات المناسك للسفر والسياحة تقدم..."></div>
+
+          <h4 class="hero-form-title">أزرار الواجهة</h4>
+          <div class="data-row">
+            <div class="data-field"><label>الزر الأول - النص</label><input type="text" id="heroBtn1Text" placeholder="برامجنا"></div>
+            <div class="data-field"><label>الزر الأول - الرابط</label><input type="text" id="heroBtn1Link" placeholder="#programs"></div>
+          </div>
+          <div class="data-row">
+            <div class="data-field"><label>الزر الثاني - النص</label><input type="text" id="heroBtn2Text" placeholder="تواصل معنا"></div>
+            <div class="data-field"><label>الزر الثاني - الرابط</label><input type="text" id="heroBtn2Link" placeholder="#contact"></div>
+          </div>
+          <div class="data-row">
+            <div class="data-field"><label>الزر الثالث - النص</label><input type="text" id="heroBtn3Text" placeholder="واتساب"></div>
+            <div class="data-field"><label>الزر الثالث - الرابط</label><input type="url" id="heroBtn3Link" placeholder="https://wa.me/9647744641155"></div>
+          </div>
+
+          <h4 class="hero-form-title">الإحصائيات</h4>
+          <div class="hero-stats-admin" id="heroStatsAdmin">
+            <div class="hero-stats-empty" style="color:var(--g400);font-size:13px">لا توجد إحصائيات. أضف إحصائية جديدة.</div>
+          </div>
+          <div class="hero-add-stat-row">
+            <input type="number" id="heroStatNumber" placeholder="الرقم" min="0" style="width:80px">
+            <input type="text" id="heroStatSuffix" placeholder="+ أو %" style="width:60px">
+            <input type="text" id="heroStatLabel" placeholder="التسمية (مثلاً: سنة خبرة)" style="flex:1">
+            <button type="button" id="heroAddStatBtn" class="modal-btn modal-btn-save" style="padding:8px 16px;font-size:12px">إضافة</button>
+          </div>
+
+          <div class="hero-form-actions">
+            <button type="button" class="modal-btn cms-preview-btn" id="heroPreviewBtn">معاينة</button>
+            <button type="submit" class="data-save" id="heroSaveBtn">حفظ الإعدادات</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ═══ 7. Company Data Card ═══ -->
     <div class="admin-card">
       <div class="admin-card-header">
         <h2>

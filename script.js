@@ -216,21 +216,6 @@ document.querySelectorAll('.btn').forEach(function(b){
   });
 });
 
-/* === Subtle Parallax on Hero Lines === */
-var hero=document.querySelector('.hero');
-function parallax(){
-  if(!hero)return;
-  var s=window.scrollY;
-  var h=hero.offsetHeight;
-  if(s<h){
-    var shapes=hero.querySelectorAll('.hero-line');
-    shapes.forEach(function(sh,i){
-      sh.style.transform='translateY('+(s*(.05+i*.02))+'px)';
-    });
-  }
-}
-window.addEventListener('scroll',parallax,{passive:true});
-
 /* === Keyboard Navigation === */
 document.addEventListener('keydown',function(e){
   if(e.key==='Tab')document.body.classList.add('kb-nav');

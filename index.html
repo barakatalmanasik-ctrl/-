@@ -70,55 +70,32 @@
 
 <!-- Hero -->
 <section id="home" class="hero" role="region" aria-label="القسم الرئيسي">
-  <div class="hero-bg">
-    <div class="hero-gradient"></div>
-    <div class="hero-mesh"></div>
-    <div class="hero-lines" aria-hidden="true">
-      <div class="hero-line hl-1"></div>
-      <div class="hero-line hl-2"></div>
-      <div class="hero-line hl-3"></div>
-      <div class="hero-line hl-4"></div>
-    </div>
+  <div class="hero-bg" id="heroBg">
+    <div class="hero-overlay"></div>
   </div>
   <div class="container hero-content">
-    <div data-anim="fade-up">
-      <div class="hero-top">
-        <span class="hero-tag">السياحة والسفر في العراق</span>
-        <span class="hero-dot" aria-hidden="true"></span>
-      </div>
-      <h1 class="hero-title">أكثر من <span>22</span> سنة من الثقة والخبرة في السفر والسياحة</h1>
-      <p class="hero-desc">شركة بركات المناسك للسفر والسياحة تقدم خدمات العمرة، حجوزات الطيران، التأشيرات، الفنادق، والنقل البري داخل وخارج العراق.</p>
-      <div class="hero-btns">
-        <a href="#contact" class="btn btn-lg btn-primary">
-          احجز الآن
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-        <a href="https://wa.me/9647744641155" class="btn btn-lg btn-ghost" target="_blank" rel="noopener">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-          تواصل عبر واتساب
-        </a>
-      </div>
+    <div class="hero-logo-wrap" id="heroLogoWrap">
+      <img id="heroLogo" src="Logo.png" alt="شركة بركات المناسك" class="hero-logo" draggable="false">
     </div>
-    <div class="hero-stats" data-anim="fade-up" data-delay="200">
-      <div class="h-stat">
-        <div class="h-stat-num"><span data-count="22">0</span><span class="gold">+</span></div>
-        <div class="h-stat-lbl">سنة خبرة</div>
-      </div>
-      <div class="h-stat">
-        <div class="h-stat-num"><span data-count="10000">0</span><span class="gold">+</span></div>
-        <div class="h-stat-lbl">عميل</div>
-      </div>
-      <div class="h-stat">
-        <div class="h-stat-num"><span data-count="5000">0</span><span class="gold">+</span></div>
-        <div class="h-stat-lbl">حجز ناجح</div>
-      </div>
-      <div class="h-stat">
-        <div class="h-stat-num"><span data-count="98">0</span><span class="gold">%</span></div>
-        <div class="h-stat-lbl">رضا العملاء</div>
-      </div>
+    <h1 class="hero-title" id="heroCompanyName">شركة بركات المناسك للسفر والسياحة</h1>
+    <p class="hero-tagline" id="heroTagline1">أكثر من 22 سنة من الثقة والخبرة في السفر والسياحة</p>
+    <p class="hero-tagline-sub" id="heroTagline2">شركة بركات المناسك للسفر والسياحة تقدم خدمات العمرة، حجوزات الطيران، التأشيرات، الفنادق، والنقل البري</p>
+    <div class="hero-btns">
+      <a href="#programs" class="btn btn-lg btn-primary" id="heroBtnPrograms">برامجنا</a>
+      <a href="#contact" class="btn btn-lg btn-outline" id="heroBtnContact">تواصل معنا</a>
+      <a href="https://wa.me/9647744641155" class="btn btn-lg btn-accent" id="heroBtnWhatsapp" target="_blank" rel="noopener">واتساب</a>
     </div>
   </div>
   <div class="hero-scroll" aria-hidden="true"><div class="hs-line"></div></div>
+</section>
+
+<!-- Stats -->
+<section class="stats-section" id="statsSection" aria-label="إحصائيات">
+  <div class="container">
+    <div class="stats-grid" id="statsGrid">
+      <!-- Populated by hero.js -->
+    </div>
+  </div>
 </section>
 
 <!-- About -->
@@ -565,6 +542,7 @@
 <script src="services.js"></script>
 <script src="gallery.js"></script>
 <script src="programs.js"></script>
+<script src="hero.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

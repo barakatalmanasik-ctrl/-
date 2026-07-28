@@ -69,12 +69,14 @@ function initDashboard(){
   loadServices();
   loadGallery();
   loadPrograms();
+  loadHeroSettings();
   initFilters();
   initModal();
   initPreviewModal();
   initServiceForm();
   initGalleryForm();
   initProgramForm();
+  initHeroForm();
   AdminSession.logAction('dashboard_open');
 }
 
@@ -1053,7 +1055,146 @@ function previewProgram(){
 }
 
 /* ═══════════════════════════════════════
-   8. PREVIEW MODAL
+   8. HERO SETTINGS
+   ═══════════════════════════════════════ */
+var heroStatsData=[];
+
+function initHeroForm(){
+  var addStatBtn=document.getElementById('heroAddStatBtn');
+  var previewBtn=document.getElementById('heroPreviewBtn');
+  var form=document.getElementById('heroForm');
+  if(addStatBtn)addStatBtn.addEventListener('click',addHeroStat);
+  if(previewBtn)previewBtn.addEventListener('click',previewHero);
+  if(form)form.addEventListener('submit',function(e){e.preventDefault();saveHeroSettings()});
+}
+
+function addHeroStat(){
+  var num=parseInt(gv('heroStatNumber'))||0;
+  var suffix=document.getElementById('heroStatSuffix')?document.getElementById('heroStatSuffix').value.trim():'';
+  var label=document.getElementById('heroStatLabel')?document.getElementById('heroStatLabel').value.trim():'';
+  if(!label||num<=0){toast('أدخل رقم صحيح وتسمية للإحصائية','error');return}
+  heroStatsData.push({number:num,suffix:suffix,label:label});
+  renderHeroStats();
+  document.getElementById('heroStatNumber').value='';
+  document.getElementById('heroStatSuffix').value='';
+  document.getElementById('heroStatLabel').value='';
+}
+
+function renderHeroStats(){
+  var container=document.getElementById('heroStatsAdmin');
+  if(!container)return;
+  if(!heroStatsData.length){
+    container.innerHTML='<div class="hero-stats-empty" style="color:var(--g400);font-size:13px">لا توجد إحصائيات. أضف إحصائية جديدة.</div>';
+    return;
+  }
+  var h='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px">';
+  heroStatsData.forEach(function(s,i){
+    h+='<div style="background:var(--off);border:1px solid var(--border);border-radius:var(--r-md);padding:12px 16px;display:flex;align-items:center;gap:12px">'
+      +'<div style="text-align:center;min-width:60px"><div style="font-family:var(--h);font-size:22px;font-weight:800;color:var(--navy);line-height:1">'+s.number+'<span style="color:var(--gold)">'+esc(s.suffix)+'</span></div></div>'
+      +'<div style="font-size:14px;color:var(--g600)">'+esc(s.label)+'</div>'
+      +'<button type="button" onclick="removeAdminHeroStat('+i+')" style="width:24px;height:24px;border-radius:50%;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--red);cursor:pointer;font-size:12px;line-height:24px;text-align:center;padding:0">&times;</button>'
+      +'</div>';
+  });
+  h+='</div>';
+  container.innerHTML=h;
+}
+
+window.removeAdminHeroStat=function(i){heroStatsData.splice(i,1);renderHeroStats()};
+
+function loadHeroSettings(){
+  db.collection('settings').doc('hero').get().then(function(doc){
+    if(!doc.exists)return;
+    var d=doc.data();
+    setVal('heroBannerImage',d.bannerImage||'');
+    setVal('heroLogoImage',d.logoImage||'');
+    setVal('heroCompanyName',d.companyName||'');
+    setVal('heroTagline1',d.tagline1||'');
+    setVal('heroTagline2',d.tagline2||'');
+    setVal('heroBtn1Text',d.btn1Text||'');
+    setVal('heroBtn1Link',d.btn1Link||'');
+    setVal('heroBtn2Text',d.btn2Text||'');
+    setVal('heroBtn2Link',d.btn2Link||'');
+    setVal('heroBtn3Text',d.btn3Text||'');
+    setVal('heroBtn3Link',d.btn3Link||'');
+    if(d.stats&&d.stats.length){
+      heroStatsData=d.stats.slice();
+    }else{
+      heroStatsData=[];
+    }
+    renderHeroStats();
+  }).catch(function(){});
+}
+
+function saveHeroSettings(){
+  var btn=document.getElementById('heroSaveBtn');
+  if(btn)btn.disabled=true;
+  var bannerImage=document.getElementById('heroBannerImage')?document.getElementById('heroBannerImage').value.trim():'';
+  var logoImage=document.getElementById('heroLogoImage')?document.getElementById('heroLogoImage').value.trim():'';
+  if(bannerImage&&!isValidImageUrl(bannerImage)){toast('رابط الصورة الرئيسية غير صالح. استخدم JPG/PNG/WEBP','error');if(btn)btn.disabled=false;return}
+  if(logoImage&&!isValidImageUrl(logoImage)){toast('رابط شعار غير صالح. استخدم JPG/PNG/WEBP/SVG','error');if(btn)btn.disabled=false;return}
+  var data={
+    bannerImage:bannerImage,
+    logoImage:logoImage,
+    companyName:gv('heroCompanyName'),
+    tagline1:gv('heroTagline1'),
+    tagline2:gv('heroTagline2'),
+    btn1Text:gv('heroBtn1Text'),
+    btn1Link:gv('heroBtn1Link'),
+    btn2Text:gv('heroBtn2Text'),
+    btn2Link:gv('heroBtn2Link'),
+    btn3Text:gv('heroBtn3Text'),
+    btn3Link:gv('heroBtn3Link'),
+    stats:heroStatsData,
+    updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+  db.collection('settings').doc('hero').set(data,{merge:true}).then(function(){
+    toast('تم حفظ إعدادات الواجهة الرئيسية','success');
+    AdminSession.logAction('hero_settings_save');
+    if(btn)btn.disabled=false;
+  }).catch(function(){
+    toast('خطأ في الحفظ','error');
+    if(btn)btn.disabled=false;
+  });
+}
+
+function isValidImageUrl(url){
+  var ext=url.split('?')[0].toLowerCase();
+  return /\.(jpg|jpeg|png|webp|svg)(\?.*)?$/.test(ext)||/^https?:\/\/.*\.(jpg|jpeg|png|webp|svg)/i.test(ext);
+}
+
+function previewHero(){
+  var bannerImage=document.getElementById('heroBannerImage')?document.getElementById('heroBannerImage').value.trim():'';
+  var logoImage=document.getElementById('heroLogoImage')?document.getElementById('heroLogoImage').value.trim():'';
+  var companyName=document.getElementById('heroCompanyName')?document.getElementById('heroCompanyName').value.trim():'';
+  var tagline1=document.getElementById('heroTagline1')?document.getElementById('heroTagline1').value.trim():'';
+  var tagline2=document.getElementById('heroTagline2')?document.getElementById('heroTagline2').value.trim():'';
+  var btn1Text=document.getElementById('heroBtn1Text')?document.getElementById('heroBtn1Text').value.trim():'';
+  var btn2Text=document.getElementById('heroBtn2Text')?document.getElementById('heroBtn2Text').value.trim():'';
+  var btn3Text=document.getElementById('heroBtn3Text')?document.getElementById('heroBtn3Text').value.trim():'';
+
+  var statsHtml='';
+  heroStatsData.forEach(function(s){
+    statsHtml+='<div style="text-align:center;padding:12px 16px;background:var(--off);border-radius:var(--r-sm)"><div style="font-size:28px;font-weight:800;color:var(--navy)">'+s.number+'<span style="color:var(--gold)">'+esc(s.suffix)+'</span></div><div style="font-size:13px;color:var(--g500)">'+esc(s.label)+'</div></div>';
+  });
+
+  var bgStyle=bannerImage?'style="background:linear-gradient(135deg,rgba(27,42,74,.88),rgba(17,29,53,.78)),url('+bannerImage+') center/cover"':'style="background:var(--navy-deep)"';
+  var logoHtml=logoImage?'<div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;border:2px solid rgba(255,255,255,.15)"><img src="'+logoImage+'" alt="" style="width:50px;height:50px;object-fit:contain"></div>':'';
+  var html='<div '+bgStyle+' style="padding:60px 24px;border-radius:var(--r-lg);text-align:center">'
+    +logoHtml
+    +(companyName?'<h3 style="color:var(--white);font-size:24px;margin-bottom:8px">'+esc(companyName)+'</h3>':'')
+    +(tagline1?'<p style="color:var(--gold-l);font-size:16px;margin-bottom:4px">'+esc(tagline1)+'</p>':'')
+    +(tagline2?'<p style="color:rgba(255,255,255,.55);font-size:13px;margin-bottom:24px">'+esc(tagline2)+'</p>':'')
+    +'<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'
+    +(btn1Text?'<span style="padding:10px 24px;background:var(--navy);color:var(--white);border-radius:var(--r-full);font-size:13px;font-weight:600">'+esc(btn1Text)+'</span>':'')
+    +(btn2Text?'<span style="padding:10px 24px;border:1.5px solid rgba(255,255,255,.2);color:var(--white);border-radius:var(--r-full);font-size:13px;font-weight:600">'+esc(btn2Text)+'</span>':'')
+    +(btn3Text?'<span style="padding:10px 24px;background:var(--emerald);color:var(--white);border-radius:var(--r-full);font-size:13px;font-weight:600">'+esc(btn3Text)+'</span>':'')
+    +'</div></div>'
+    +(statsHtml?'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:20px">'+statsHtml+'</div>':'');
+  openPreviewModal(html);
+}
+
+/* ═══════════════════════════════════════
+   9. PREVIEW MODAL
    ═══════════════════════════════════════ */
 var previewModal=document.getElementById('previewModal');
 
@@ -1079,7 +1220,7 @@ function closePreviewModal(){
 }
 
 /* ═══════════════════════════════════════
-   9. COMPANY DATA
+   10. COMPANY DATA
    ═══════════════════════════════════════ */
 var dataForm=document.getElementById('dataForm');
 
