@@ -68,13 +68,13 @@ function initDashboard(){
   loadData();
   loadServices();
   loadGallery();
-  loadTrips();
+  loadPrograms();
   initFilters();
   initModal();
   initPreviewModal();
   initServiceForm();
   initGalleryForm();
-  initTripForm();
+  initProgramForm();
   AdminSession.logAction('dashboard_open');
 }
 
@@ -119,8 +119,8 @@ function loadAllStats(){
     setStat('statGallery',snap.size);
   }).catch(function(){});
 
-  db.collection('trips').get().then(function(snap){
-    setStat('statTrips',snap.size);
+  db.collection('programs').get().then(function(snap){
+    setStat('statPrograms',snap.size);
   }).catch(function(){});
 }
 
@@ -676,168 +676,378 @@ window.deleteGallery=function(id){
 };
 
 /* ═══════════════════════════════════════
-   7. TRIPS CRUD
+   7. PROGRAMS CRUD (with Timeline & Gallery)
    ═══════════════════════════════════════ */
-var tripList=document.getElementById('tripList');
-var allTripsData=[];
-var tripUploadFile=null;
+var programList=document.getElementById('programList');
+var allProgramsData=[];
+var prgTimelineData=[];
+var prgGalleryData=[];
+var prgTimelineIdCounter=0;
 
-function initTripForm(){
-  var addBtn=document.getElementById('addTripBtn');
-  var form=document.getElementById('tripForm');
-  var uploadZone=document.getElementById('tripUploadZone');
-  var uploadInput=document.getElementById('tripUploadInput');
-  var previewBtn=document.getElementById('tripPreviewBtn');
-  if(addBtn)addBtn.addEventListener('click',function(){
-    form.style.display=form.style.display==='none'?'block':'none';
-    document.getElementById('tripEditId').value='';
-    form.reset();
-    document.getElementById('tripPreview').style.display='none';
-    tripUploadFile=null;
+function initProgramForm(){
+  var addBtn=document.getElementById('addProgramBtn');
+  var form=document.getElementById('programForm');
+  var modal=document.getElementById('programModal');
+  var closeBtn=document.getElementById('programModalClose');
+  var cancelBtn=document.getElementById('programCancelBtn');
+  var previewBtn=document.getElementById('prgPreviewBtn');
+  var addDayBtn=document.getElementById('prgAddDayBtn');
+  var addGalleryBtn=document.getElementById('prgAddGalleryBtn');
+  var galleryInput=document.getElementById('prgGalleryInput');
+
+  if(addBtn)addBtn.addEventListener('click',function(){openProgramModal()});
+  if(closeBtn)closeBtn.addEventListener('click',closeProgramModal);
+  if(cancelBtn)cancelBtn.addEventListener('click',closeProgramModal);
+  if(modal)modal.addEventListener('click',function(e){if(e.target===modal)closeProgramModal()});
+  if(form)form.addEventListener('submit',function(e){e.preventDefault();saveProgram()});
+  if(previewBtn)previewBtn.addEventListener('click',previewProgram);
+  if(addDayBtn)addDayBtn.addEventListener('click',addTimelineDay);
+  if(addGalleryBtn)addGalleryBtn.addEventListener('click',function(){
+    var url=galleryInput.value.trim();
+    if(!url){toast('أدخل رابط الصورة','error');return}
+    prgGalleryData.push(url);
+    renderPrgGallery();
+    galleryInput.value='';
   });
-  if(form)form.addEventListener('submit',function(e){e.preventDefault();saveTrip()});
-  if(previewBtn)previewBtn.addEventListener('click',function(){previewTrip()});
-  if(uploadZone&&uploadInput){
-    uploadZone.addEventListener('click',function(){uploadInput.click()});
-    uploadZone.addEventListener('dragover',function(e){e.preventDefault();this.classList.add('dragover')});
-    uploadZone.addEventListener('dragleave',function(){this.classList.remove('dragover')});
-    uploadZone.addEventListener('drop',function(e){
-      e.preventDefault();this.classList.remove('dragover');
-      if(e.dataTransfer.files[0])handleTripFile(e.dataTransfer.files[0]);
-    });
-    uploadInput.addEventListener('change',function(){if(this.files[0])handleTripFile(this.files[0])});
-  }
+  galleryInput.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){e.preventDefault();addGalleryBtn.click()}
+  });
 }
 
-function handleTripFile(file){
-  if(!file.type.startsWith('image/')){toast('الملف ليس صورة','error');return}
-  tripUploadFile=file;
-  var reader=new FileReader();
-  reader.onload=function(e){
-    var img=document.getElementById('tripPreview');
-    img.src=e.target.result;
-    img.style.display='block';
-  };
-  reader.readAsDataURL(file);
-}
+function openProgramModal(id){
+  var modal=document.getElementById('programModal');
+  var title=document.getElementById('programModalTitle');
+  prgTimelineData=[];
+  prgGalleryData=[];
+  prgTimelineIdCounter=0;
+  document.getElementById('programForm').reset();
+  document.getElementById('prgEditId').value='';
 
-function loadTrips(){
-  if(!tripList)return;
-  db.collection('trips').orderBy('order','asc').get()
-    .then(function(snap){
-      allTripsData=[];
-      snap.docs.forEach(function(doc){allTripsData.push({id:doc.id,data:doc.data()})});
-      renderTrips();
-    }).catch(function(){tripList.innerHTML='<div class="comment-empty">خطأ</div>'});
-}
-
-function renderTrips(){
-  if(!tripList)return;
-  if(!allTripsData.length){tripList.innerHTML='<div class="comment-empty">لا توجد رحلات بعد</div>';return}
-  var html='';
-  allTripsData.forEach(function(item){
+  if(id){
+    title.textContent='تعديل البرنامج';
+    var item=allProgramsData.find(function(p){return p.id===id});
+    if(!item)return;
     var d=item.data;
-    var st=d.status==='active'?'<span class="status-approved">نشط</span>':'<span class="status-rejected">غير نشط</span>';
-    var tripSt=d.tripStatus==='available'?'متاح':d.tripStatus==='full'?'مكتمل':'غير متاح';
-    html+='<div class="comment-item" data-id="'+item.id+'">'
-      +'<div class="comment-meta"><span class="comment-author">'+esc(d.name||'')+'</span>'+st
-      +'<span class="comment-service">'+esc(tripSt)+'</span>'
-      +(d.price?'<span class="comment-date">'+esc(d.price)+'</span>':'')
-      +'</div>'
-      +(d.program?'<p class="comment-text">'+esc(d.program).substring(0,150)+(d.program.length>150?'...':'')+'</p>':'')
-      +'<div class="comment-actions">'
-      +'<button class="btn-edit" onclick="editTrip(\''+item.id+'\')">تعديل</button>'
-      +'<button class="btn-delete" onclick="deleteTrip(\''+item.id+'\')">حذف</button>'
-      +'</div></div>';
-  });
-  tripList.innerHTML=html;
-}
+    document.getElementById('prgEditId').value=id;
+    document.getElementById('prgName').value=d.name||'';
+    document.getElementById('prgPrice').value=d.price||'';
+    document.getElementById('prgShortDesc').value=d.shortDesc||'';
+    document.getElementById('prgFullDesc').value=d.fullDesc||'';
+    document.getElementById('prgDuration').value=d.duration||'';
+    document.getElementById('prgDepartureDate').value=d.departureDate||'';
+    document.getElementById('prgReturnDate').value=d.returnDate||'';
+    document.getElementById('prgDays').value=d.days||'';
+    document.getElementById('prgNights').value=d.nights||'';
+    document.getElementById('prgSeats').value=d.seats||'';
+    document.getElementById('prgSeatsLeft').value=d.seatsLeft||'';
+    document.getElementById('prgOrder').value=d.order||0;
+    document.getElementById('prgProgramStatus').value=d.programStatus||'available';
+    document.getElementById('prgStatus').value=d.status||'active';
+    document.getElementById('prgTransport').value=d.transport||'';
+    document.getElementById('prgAirlines').value=d.airlines||'';
+    document.getElementById('prgHotelMakkah').value=d.hotelMakkah||'';
+    document.getElementById('prgHotelMadinah').value=d.hotelMadinah||'';
+    document.getElementById('prgHotelStars').value=d.hotelStars||'';
+    document.getElementById('prgMeals').value=d.meals||'';
+    document.getElementById('prgServicesIncluded').value=d.servicesIncluded||'';
+    document.getElementById('prgNotes').value=d.notes||'';
+    document.getElementById('prgMainImage').value=d.mainImage||'';
+    if(d.gallery&&d.gallery.length){prgGalleryData=d.gallery.slice()}
+    renderPrgGallery();
 
-function saveTrip(){
-  var editId=document.getElementById('tripEditId').value;
-  var imageUrl=gv('tripImageUrl');
-  if(!imageUrl&&!tripUploadFile&&!editId){toast('ارفع صورة أو أدخل رابط','error');return}
-
-  function doSave(url){
-    var data={
-      name:gv('tripName'),
-      duration:gv('tripDuration'),
-      departureDate:gv('tripDate'),
-      price:gv('tripPrice'),
-      hotel:gv('tripHotel'),
-      program:gv('tripProgram'),
-      seatsLeft:parseInt(gv('tripSeats'))||0,
-      tripStatus:gv('tripTripStatus'),
-      imageUrl:url||imageUrl,
-      order:parseInt(gv('tripOrder'))||0,
-      status:gv('tripStatus'),
-      createdAt:firebase.firestore.FieldValue.serverTimestamp()
-    };
-    if(!data.name){toast('أدخل اسم الرحلة','error');return}
-    var p;
-    if(editId){p=db.collection('trips').doc(editId).update(data)}
-    else{p=db.collection('trips').add(data)}
-    p.then(function(){
-      toast(editId?'تم التحديث':'تمت الإضافة','success');
-      AdminSession.logAction('trip_save',editId||'new');
-      document.getElementById('tripForm').style.display='none';
-      loadTrips();loadAllStats();
-    }).catch(function(){toast('خطأ في الحفظ','error')});
-  }
-
-  if(tripUploadFile){
-    var path='trips/'+Date.now()+'_'+tripUploadFile.name;
-    storage.ref(path).put(tripUploadFile).then(function(){
-      return storage.ref(path).getDownloadURL();
-    }).then(function(url){doSave(url)}).catch(function(){toast('خطأ في رفع الصورة','error')});
+    db.collection('programs').doc(id).collection('timeline').orderBy('order','asc').get().then(function(snap){
+      prgTimelineData=[];
+      prgTimelineIdCounter=0;
+      snap.docs.forEach(function(tlDoc){
+        var t=tlDoc.data();
+        prgTimelineData.push({
+          _id:'tl_'+(prgTimelineIdCounter++),
+          _docId:tlDoc.id,
+          day:t.day||1,
+          title:t.title||'',
+          description:t.description||'',
+          images:t.images||[]
+        });
+      });
+      renderPrgTimeline();
+    }).catch(function(){renderPrgTimeline()});
   }else{
-    doSave(null);
+    title.textContent='إضافة برنامج جديد';
+    renderPrgGallery();
+    renderPrgTimeline();
   }
+  modal.classList.add('show');
+  document.body.style.overflow='hidden';
 }
 
-window.editTrip=function(id){
-  var item=allTripsData.find(function(t){return t.id===id});
-  if(!item)return;
-  var d=item.data;
-  document.getElementById('tripEditId').value=id;
-  document.getElementById('tripName').value=d.name||'';
-  document.getElementById('tripDuration').value=d.duration||'';
-  document.getElementById('tripDate').value=d.departureDate||'';
-  document.getElementById('tripPrice').value=d.price||'';
-  document.getElementById('tripHotel').value=d.hotel||'';
-  document.getElementById('tripProgram').value=d.program||'';
-  document.getElementById('tripSeats').value=d.seatsLeft||0;
-  document.getElementById('tripTripStatus').value=d.tripStatus||'available';
-  document.getElementById('tripImageUrl').value=d.imageUrl||'';
-  document.getElementById('tripOrder').value=d.order||0;
-  document.getElementById('tripStatus').value=d.status||'active';
-  if(d.imageUrl){
-    var img=document.getElementById('tripPreview');
-    img.src=d.imageUrl;img.style.display='block';
+function closeProgramModal(){
+  document.getElementById('programModal').classList.remove('show');
+  document.body.style.overflow='';
+}
+
+function renderPrgGallery(){
+  var list=document.getElementById('prgGalleryList');
+  if(!list)return;
+  if(!prgGalleryData.length){
+    list.innerHTML='<div style="color:var(--g400);font-size:13px;margin-bottom:8px">لا توجد صور مضافة.</div>';
+    return;
   }
-  document.getElementById('tripForm').style.display='block';
-  tripUploadFile=null;
+  var h='<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px">';
+  prgGalleryData.forEach(function(url,i){
+    h+='<div style="position:relative;width:80px;height:80px;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border)">'
+      +'<img src="'+esc(url)+'" alt="" style="width:100%;height:100%;object-fit:cover">'
+      +'<button type="button" onclick="removePrgGallery('+i+')" style="position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:rgba(239,68,68,.9);color:var(--white);border:none;font-size:12px;line-height:20px;text-align:center;cursor:pointer">&times;</button>'
+      +'</div>';
+  });
+  h+='</div>';
+  list.innerHTML=h;
+}
+window.removePrgGallery=function(i){prgGalleryData.splice(i,1);renderPrgGallery()};
+
+function addTimelineDay(){
+  prgTimelineData.push({
+    _id:'tl_'+(prgTimelineIdCounter++),
+    _docId:null,
+    day:prgTimelineData.length+1,
+    title:'',
+    description:'',
+    images:[]
+  });
+  renderPrgTimeline();
+}
+
+function renderPrgTimeline(){
+  var container=document.getElementById('prgTimelineDays');
+  if(!container)return;
+  if(!prgTimelineData.length){
+    container.innerHTML='<div style="color:var(--g400);font-size:13px;margin-bottom:8px">لا توجد أيام مضافة.</div>';
+    return;
+  }
+  var h='';
+  prgTimelineData.forEach(function(item,i){
+    h+='<div class="prg-tl-day" data-idx="'+i+'" style="background:var(--off);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;margin-bottom:10px">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +'<span style="background:var(--gold);color:var(--white);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">'+(i+1)+'</span>'
+      +'<strong style="font-size:14px;color:var(--g800)">اليوم '+(i+1)+'</strong>'
+      +'</div>'
+      +'<div style="display:flex;gap:4px">'
+      +'<button type="button" onclick="movePrgDay('+i+',-1)" '+(i===0?'disabled style="opacity:.3"':'')+' style="width:28px;height:28px;border-radius:50%;border:1px solid var(--g200);background:var(--white);cursor:pointer;font-size:14px">&uarr;</button>'
+      +'<button type="button" onclick="movePrgDay('+i+',1)" '+(i===prgTimelineData.length-1?'disabled style="opacity:.3"':'')+' style="width:28px;height:28px;border-radius:50%;border:1px solid var(--g200);background:var(--white);cursor:pointer;font-size:14px">&darr;</button>'
+      +'<button type="button" onclick="removePrgDay('+i+')" style="width:28px;height:28px;border-radius:50%;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--red);cursor:pointer;font-size:14px">&times;</button>'
+      +'</div>'
+      +'</div>'
+      +'<div class="modal-row">'
+      +'<div class="modal-field"><label>عنوان اليوم</label><input type="text" class="prg-tl-title-input" value="'+esc(item.title)+'" placeholder="الانطلاق من العراق"></div>'
+      +'<div class="modal-field"><label>رقم اليوم</label><input type="number" class="prg-tl-day-input" value="'+(item.day||(i+1))+'" min="1"></div>'
+      +'</div>'
+      +'<div class="modal-field"><label>وصف النشاط</label><textarea class="prg-tl-desc-input" rows="2" placeholder="وصف نشاط اليوم...">'+esc(item.description)+'</textarea></div>'
+      +'<div class="modal-field"><label>صور اليوم (روابط)</label>'
+      +'<div class="prg-tl-imgs" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px">'
+      +(item.images.length?item.images.map(function(im,j){
+        return '<div style="position:relative;width:60px;height:60px;border-radius:4px;overflow:hidden;border:1px solid var(--border)">'
+          +'<img src="'+esc(im)+'" alt="" style="width:100%;height:100%;object-fit:cover">'
+          +'<button type="button" onclick="removePrgDayImg('+i+','+j+')" style="position:absolute;top:1px;left:1px;width:16px;height:16px;border-radius:50%;background:rgba(239,68,68,.9);color:var(--white);border:none;font-size:10px;line-height:16px;text-align:center;cursor:pointer">&times;</button>'
+          +'</div>';
+      }).join(''):'<span style="color:var(--g400);font-size:12px">لا توجد صور</span>')
+      +'</div>'
+      +'<div style="display:flex;gap:6px">'
+      +'<input type="url" class="prg-tl-img-input" placeholder="رابط صورة..." style="flex:1;padding:6px 10px;border:1.5px solid var(--g200);border-radius:var(--r-sm);font-size:12px">'
+      +'<button type="button" onclick="addPrgDayImg('+i+')" style="padding:6px 12px;background:var(--navy);color:var(--white);border:none;border-radius:var(--r-sm);font-size:11px;cursor:pointer">إضافة</button>'
+      +'</div>'
+      +'</div>'
+      +'</div>';
+  });
+  container.innerHTML=h;
+}
+
+window.addPrgDayImg=function(idx){
+  var container=document.getElementById('prgTimelineDays');
+  var inputs=container.querySelectorAll('.prg-tl-img-input');
+  var url=inputs[idx].value.trim();
+  if(!url){toast('أدخل رابط الصورة','error');return}
+  if(!prgTimelineData[idx].images)prgTimelineData[idx].images=[];
+  prgTimelineData[idx].images.push(url);
+  inputs[idx].value='';
+  renderPrgTimeline();
 };
 
-window.deleteTrip=function(id){
-  if(!confirm('هل أنت متأكد من حذف هذه الرحلة؟'))return;
-  db.collection('trips').doc(id).delete().then(function(){
+window.removePrgDayImg=function(idx,j){
+  if(prgTimelineData[idx]&&prgTimelineData[idx].images){
+    prgTimelineData[idx].images.splice(j,1);
+    renderPrgTimeline();
+  }
+};
+
+window.movePrgDay=function(idx,dir){
+  var newIdx=idx+dir;
+  if(newIdx<0||newIdx>=prgTimelineData.length)return;
+  var temp=prgTimelineData[idx];
+  prgTimelineData[idx]=prgTimelineData[newIdx];
+  prgTimelineData[newIdx]=temp;
+  renderPrgTimeline();
+};
+
+window.removePrgDay=function(idx){
+  if(!confirm('حذف هذا اليوم؟'))return;
+  prgTimelineData.splice(idx,1);
+  renderPrgTimeline();
+};
+
+function collectTimelineData(){
+  var container=document.getElementById('prgTimelineDays');
+  if(!container)return prgTimelineData;
+  var titleInputs=container.querySelectorAll('.prg-tl-title-input');
+  var dayInputs=container.querySelectorAll('.prg-tl-day-input');
+  var descInputs=container.querySelectorAll('.prg-tl-desc-input');
+  prgTimelineData.forEach(function(item,i){
+    if(titleInputs[i])item.title=titleInputs[i].value.trim();
+    if(dayInputs[i])item.day=parseInt(dayInputs[i].value)||(i+1);
+    if(descInputs[i])item.description=descInputs[i].value.trim();
+  });
+  return prgTimelineData;
+}
+
+function loadPrograms(){
+  if(!programList)return;
+  db.collection('programs').orderBy('order','asc').get()
+    .then(function(snap){
+      allProgramsData=[];
+      snap.docs.forEach(function(doc){allProgramsData.push({id:doc.id,data:doc.data()})});
+      renderPrograms();
+    }).catch(function(){programList.innerHTML='<div class="comment-empty">خطأ</div>'});
+}
+
+function renderPrograms(){
+  if(!programList)return;
+  if(!allProgramsData.length){programList.innerHTML='<div class="comment-empty">لا توجد برامج بعد</div>';return}
+  var html='';
+  allProgramsData.forEach(function(item){
+    var d=item.data;
+    var st=d.status==='active'?'<span class="status-approved">نشط</span>':'<span class="status-rejected">غير نشط</span>';
+    var pstLabels={'available':'متاح','almost_full':'أوشك','full':'مكتمل','coming_soon':'قريباً','ended':'منتهي'};
+    var pst=d.programStatus||'';
+    html+='<div class="comment-item" data-id="'+item.id+'">'
+      +'<div class="comment-meta"><span class="comment-author">'+esc(d.name||'')+'</span>'+st
+      +'<span class="comment-service">'+(pstLabels[pst]||pst)+'</span>'
+      +(d.price?'<span class="comment-date">'+esc(d.price)+'</span>':'')
+      +'</div>'
+      +(d.shortDesc?'<p class="comment-text">'+esc(d.shortDesc).substring(0,150)+(d.shortDesc.length>150?'...':'')+'</p>':'')
+      +'<div class="comment-actions">'
+      +'<button class="btn-edit" onclick="editProgram(\''+item.id+'\')">تعديل</button>'
+      +'<button class="btn-delete" onclick="deleteProgram(\''+item.id+'\')">حذف</button>'
+      +'</div></div>';
+  });
+  programList.innerHTML=html;
+}
+
+function saveProgram(){
+  var editId=document.getElementById('prgEditId').value;
+  collectTimelineData();
+  var data={
+    name:gv('prgName'),
+    price:gv('prgPrice'),
+    shortDesc:gv('prgShortDesc'),
+    fullDesc:gv('prgFullDesc'),
+    duration:gv('prgDuration'),
+    departureDate:gv('prgDepartureDate'),
+    returnDate:gv('prgReturnDate'),
+    days:parseInt(gv('prgDays'))||0,
+    nights:parseInt(gv('prgNights'))||0,
+    seats:parseInt(gv('prgSeats'))||0,
+    seatsLeft:parseInt(gv('prgSeatsLeft'))||0,
+    order:parseInt(gv('prgOrder'))||0,
+    programStatus:gv('prgProgramStatus'),
+    status:gv('prgStatus'),
+    transport:gv('prgTransport'),
+    airlines:gv('prgAirlines'),
+    hotelMakkah:gv('prgHotelMakkah'),
+    hotelMadinah:gv('prgHotelMadinah'),
+    hotelStars:parseInt(gv('prgHotelStars'))||0,
+    meals:gv('prgMeals'),
+    servicesIncluded:gv('prgServicesIncluded'),
+    notes:gv('prgNotes'),
+    mainImage:gv('prgMainImage'),
+    gallery:prgGalleryData,
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+  if(!data.name){toast('أدخل اسم البرنامج','error');return}
+
+  function saveTimeline(progRef){
+    var batch=db.batch();
+    prgTimelineData.forEach(function(item,i){
+      var tlData={
+        day:item.day||(i+1),
+        title:item.title||'',
+        description:item.description||'',
+        images:item.images||[],
+        order:i
+      };
+      if(item._docId){
+        batch.update(progRef.collection('timeline').doc(item._docId),tlData);
+      }else{
+        batch.set(progRef.collection('timeline').doc(),tlData);
+      }
+    });
+    return batch.commit();
+  }
+
+  var p;
+  if(editId){
+    p=db.collection('programs').doc(editId).update(data).then(function(){
+      return saveTimeline(db.collection('programs').doc(editId));
+    });
+  }else{
+    p=db.collection('programs').add(data).then(function(ref){
+      return saveTimeline(ref);
+    });
+  }
+  p.then(function(){
+    toast(editId?'تم التحديث':'تمت الإضافة','success');
+    AdminSession.logAction('program_save',editId||'new');
+    closeProgramModal();
+    loadPrograms();loadAllStats();
+  }).catch(function(){toast('خطأ في الحفظ','error')});
+}
+
+window.editProgram=function(id){
+  openProgramModal(id);
+};
+
+window.deleteProgram=function(id){
+  if(!confirm('هل أنت متأكد من حذف هذا البرنامج؟'))return;
+  var ref=db.collection('programs').doc(id);
+  ref.collection('timeline').get().then(function(snap){
+    var batch=db.batch();
+    snap.docs.forEach(function(doc){batch.delete(doc.ref)});
+    return batch.commit();
+  }).then(function(){
+    return ref.delete();
+  }).then(function(){
     toast('تم الحذف','success');
-    AdminSession.logAction('trip_delete',id);
-    loadTrips();loadAllStats();
+    AdminSession.logAction('program_delete',id);
+    loadPrograms();loadAllStats();
   }).catch(function(){toast('خطأ في الحذف','error')});
 };
 
-function previewTrip(){
+function previewProgram(){
+  var pstLabels={'available':'متاح للحجز','almost_full':'المقاعد أوشكت على النفاد','full':'اكتمل العدد','coming_soon':'قريباً','ended':'انتهى البرنامج'};
+  var transLabels={'flight':'طيران','bus':'باصات VIP','mixed':'النقل المختلط'};
+  var pst=gv('prgProgramStatus')||'';
   var html='<div class="preview-trip-card">'
-    +'<h3>'+esc(gv('tripName'))+'</h3>'
-    +'<p>المدة: '+esc(gv('tripDuration'))+'</p>'
-    +'<p>التاريخ: '+esc(gv('tripDate'))+'</p>'
-    +'<p>السعر: '+esc(gv('tripPrice'))+'</p>'
-    +'<p>الفندق: '+esc(gv('tripHotel'))+'</p>'
-    +'<p>المقاعد: '+esc(gv('tripSeats'))+'</p>'
-    +'<p>الحالة: '+esc(gv('tripTripStatus'))+'</p>'
-    +(gv('tripProgram')?'<p>'+esc(gv('tripProgram'))+'</p>':'')
+    +'<h3>'+esc(gv('prgName'))+'</h3>'
+    +'<p><strong>السعر:</strong> '+esc(gv('prgPrice'))+'</p>'
+    +'<p><strong>المدة:</strong> '+esc(gv('prgDuration'))+'</p>'
+    +'<p><strong>الانطلاق:</strong> '+esc(gv('prgDepartureDate'))+'</p>'
+    +'<p><strong>العودة:</strong> '+esc(gv('prgReturnDate'))+'</p>'
+    +'<p><strong>الأيام:</strong> '+esc(gv('prgDays'))+' | <strong>الليالي:</strong> '+esc(gv('prgNights'))+'</p>'
+    +'<p><strong>المقاعد:</strong> '+esc(gv('prgSeats'))+' | <strong>المتبقي:</strong> '+esc(gv('prgSeatsLeft'))+'</p>'
+    +'<p><strong>الحالة:</strong> '+(pstLabels[pst]||pst)+'</p>'
+    +(gv('prgTransport')?'<p><strong>النقل:</strong> '+(transLabels[gv('prgTransport')]||gv('prgTransport'))+'</p>':'')
+    +(gv('prgHotelMakkah')?'<p><strong>فندق مكة:</strong> '+esc(gv('prgHotelMakkah'))+'</p>':'')
+    +(gv('prgHotelMadinah')?'<p><strong>فندق المدينة:</strong> '+esc(gv('prgHotelMadinah'))+'</p>':'')
+    +(gv('prgServicesIncluded')?'<p><strong>الخدمات:</strong> '+esc(gv('prgServicesIncluded'))+'</p>':'')
+    +'<p style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--g400);font-size:12px">عدد أيام الجدول: '+prgTimelineData.length+' | صور المعرض: '+prgGalleryData.length+'</p>'
     +'</div>';
   openPreviewModal(html);
 }

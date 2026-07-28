@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index, follow">
+<title>تفاصيل البرنامج | بركات المناسك</title>
+<link rel="icon" type="image/png" href="Logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ═══ Program Detail Page Styles ═══ */
+.pd-hero{position:relative;width:100%;height:60vh;min-height:400px;overflow:hidden;background:var(--off)}
+.pd-hero img{width:100%;height:100%;object-fit:cover}
+.pd-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.85));display:flex;align-items:flex-end;padding:40px}
+.pd-hero-overlay h1{font-family:var(--h);font-size:36px;font-weight:800;color:var(--white);text-shadow:0 2px 8px rgba(0,0,0,.2)}
+.pd-section{padding:40px 0}
+.pd-section-alt{background:var(--off)}
+.pd-section h2{font-family:var(--h);font-size:24px;font-weight:700;color:var(--g900);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.pd-section h2 svg{width:22px;height:22px;stroke:var(--gold);flex-shrink:0}
+.pd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.pd-info-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-md);padding:20px;text-align:center;transition:all .3s var(--ease)}
+.pd-info-card:hover{box-shadow:var(--sh-sm);transform:translateY(-2px)}
+.pd-info-card .pd-ic{width:36px;height:36px;margin:0 auto 10px;border-radius:var(--r-md);background:rgba(27,42,74,.06);display:flex;align-items:center;justify-content:center;color:var(--navy)}
+.pd-info-card .pd-ic svg{width:18px;height:18px}
+.pd-info-card h4{font-size:11px;color:var(--g400);margin-bottom:4px;font-weight:500}
+.pd-info-card p{font-size:15px;font-weight:700;color:var(--g800);font-family:var(--h)}
+.pd-desc{font-size:15px;color:var(--g600);line-height:2;max-width:800px}
+.pd-services{display:flex;flex-wrap:wrap;gap:8px}
+.pd-service-tag{padding:8px 16px;background:rgba(201,169,110,.1);border:1px solid rgba(201,169,110,.2);color:var(--navy);border-radius:var(--r-full);font-size:13px;font-weight:500}
+.pd-timeline{position:relative;padding-right:40px}
+.pd-timeline::before{content:'';position:absolute;right:14px;top:8px;bottom:8px;width:2px;background:var(--g200);border-radius:2px}
+.pd-tl-item{position:relative;margin-bottom:28px;padding-right:24px}
+.pd-tl-item:last-child{margin-bottom:0}
+.pd-tl-dot{position:absolute;right:-26px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:3px solid var(--white);box-shadow:0 0 0 2px var(--gold);z-index:1}
+.pd-tl-title{font-family:var(--h);font-size:16px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.pd-tl-title .pd-tl-day{color:var(--gold);margin-left:6px}
+.pd-tl-text{font-size:14px;color:var(--g600);line-height:1.8;margin-bottom:8px}
+.pd-tl-imgs{display:flex;gap:8px;flex-wrap:wrap}
+.pd-tl-imgs img{width:80px;height:80px;object-fit:cover;border-radius:var(--r-sm);cursor:pointer;transition:transform .3s var(--ease)}
+.pd-tl-imgs img:hover{transform:scale(1.05)}
+.pd-gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.pd-gallery-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:var(--r-sm);cursor:pointer;transition:transform .3s var(--ease)}
+.pd-gallery-grid img:hover{transform:scale(1.03)}
+.pd-notes{background:var(--white);border:1px solid var(--border);border-radius:var(--r-md);padding:24px;font-size:14px;color:var(--g600);line-height:2}
+.pd-wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:400px;margin:20px auto 0;padding:14px 28px;background:var(--wa);color:var(--white);border-radius:var(--r-full);font-size:16px;font-weight:700;transition:all .3s var(--ease)}
+.pd-wa-btn:hover{background:var(--wa-d);transform:translateY(-2px);box-shadow:0 4px 20px rgba(37,211,102,.3)}
+.pd-loader{display:flex;align-items:center;justify-content:center;min-height:60vh;text-align:center;padding:40px}
+.pd-loader-dot{width:12px;height:12px;border-radius:50%;background:var(--navy);display:inline-block;animation:pdBounce 1.4s ease-in-out infinite both}
+.pd-loader-dot:nth-child(1){animation-delay:-.32s}
+.pd-loader-dot:nth-child(2){animation-delay:-.16s}
+.pd-loader-dot:nth-child(3){animation-delay:0}
+@keyframes pdBounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+.pd-back{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;border:1px solid var(--g200);border-radius:var(--r-full);font-size:13px;color:var(--g600);transition:all .25s var(--ease)}
+.pd-back:hover{border-color:var(--navy);color:var(--navy)}
+
+@media(max-width:767px){
+  .pd-hero{height:40vh;min-height:280px}
+  .pd-hero-overlay{padding:24px}
+  .pd-hero-overlay h1{font-size:24px}
+  .pd-section{padding:24px 0}
+  .pd-section h2{font-size:20px}
+  .pd-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .pd-info-card{padding:14px 10px}
+  .pd-info-card p{font-size:13px}
+  .pd-desc{font-size:14px}
+  .pd-timeline{padding-right:30px}
+  .pd-tl-item{padding-right:16px}
+  .pd-tl-dot{right:-22px;width:10px;height:10px}
+  .pd-tl-title{font-size:14px}
+  .pd-gallery-grid{grid-template-columns:repeat(3,1fr);gap:6px}
+}
+@media(max-width:425px){
+  .pd-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .pd-info-card{padding:12px 8px}
+  .pd-gallery-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div id="pdLoader" class="pd-loader">
+  <div style="text-align:center">
+    <div style="margin-bottom:16px"><div class="pd-loader-dot"></div><div class="pd-loader-dot"></div><div class="pd-loader-dot"></div></div>
+    <p style="color:var(--g400);font-size:14px">جاري تحميل البرنامج...</p>
+  </div>
+</div>
+
+<div id="pdContent" style="display:none">
+  <div style="padding:16px 24px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
+    <a href="index.html#programs" class="pd-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      العودة للبرامج
+    </a>
+  </div>
+
+  <div class="pd-hero">
+    <img id="pdHeroImg" src="" alt="">
+    <div class="pd-hero-overlay"><h1 id="pdTitle"></h1></div>
+  </div>
+
+  <div class="pd-section">
+    <div class="container">
+      <div class="pd-grid" id="pdInfoGrid"></div>
+      <div id="pdDescWrap" style="margin-top:24px;display:none">
+        <p class="pd-desc" id="pdDesc"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pd-section pd-section-alt" id="pdTransportSection" style="display:none">
+    <div class="container">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>طريقة النقل</h2>
+      <p id="pdTransport" style="font-size:15px;color:var(--g600);line-height:1.8"></p>
+    </div>
+  </div>
+
+  <div class="pd-section" id="pdHotelSection" style="display:none">
+    <div class="container">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2z"/><path d="M9 22V12h6v10"/></svg>الفنادق والإقامة</h2>
+      <div class="pd-grid" id="pdHotelGrid"></div>
+    </div>
+  </div>
+
+  <div class="pd-section pd-section-alt" id="pdServicesSection" style="display:none">
+    <div class="container">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>الخدمات المشمولة</h2>
+      <p id="pdServicesText" style="font-size:15px;color:var(--g600);line-height:2"></p>
+    </div>
+  </div>
+
+  <div class="pd-section" id="pdTimelineSection" style="display:none">
+    <div class="container">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>خارطة البرنامج</h2>
+      <div class="pd-timeline" id="pdTimeline"></div>
+    </div>
+  </div>
+
+  <div class="pd-section pd-section-alt" id="pdGallerySection" style="display:none">
+    <div class="container">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>معرض الصور</h2>
+      <div class="pd-gallery-grid" id="pdGallery"></div>
+    </div>
+  </div>
+
+  <div class="pd-section" id="pdNotesSection" style="display:none">
+    <div class="container">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>ملاحظات الشركة</h2>
+      <div class="pd-notes" id="pdNotes"></div>
+    </div>
+  </div>
+
+  <div class="pd-section" style="text-align:center">
+    <div class="container">
+      <a id="pdWALink" href="https://wa.me/9647744641155" target="_blank" rel="noopener" class="pd-wa-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        احجز الآن عبر واتساب
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lb-overlay" id="pdLightbox">
+  <div class="lb-backdrop"></div>
+  <div class="lb-modal">
+    <button class="lb-close" id="pdLbClose" aria-label="إغلاق">&times;</button>
+    <button class="lb-nav lb-prev" id="pdLbPrev" aria-label="السابق"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <button class="lb-nav lb-next" id="pdLbNext" aria-label="التالي"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <div class="lb-img-wrap"><img class="lb-img" id="pdLbImg" src="" alt=""></div>
+    <div class="lb-toolbar">
+      <button class="lb-zoom-btn" id="pdZoomIn" aria-label="تكبير"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
+      <button class="lb-zoom-btn" id="pdZoomOut" aria-label="تصغير"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
+      <span class="lb-counter" id="pdLbCounter">1 / 1</span>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="admin/firebase-config.js"></script>
+<script>
+(function(){
+'use strict';
+
+try{firebase.initializeApp(firebaseConfig)}catch(e){}
+var db=firebase.firestore();
+
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+var params=new URLSearchParams(window.location.search);
+var programId=params.get('id');
+if(!programId){document.getElementById('pdLoader').innerHTML='<p style="color:var(--red)">لم يتم تحديد البرنامج</p>';return}
+
+var allGalleryImages=[];
+var lbIdx=0,lbZoom=1;
+var lbOverlay=document.getElementById('pdLightbox');
+var lbImg=document.getElementById('pdLbImg');
+var lbImgWrap=document.querySelector('#pdLightbox .lb-img-wrap');
+var lbCounter=document.getElementById('pdLbCounter');
+
+function openLb(idx){
+  if(!allGalleryImages.length)return;
+  lbIdx=idx;
+  lbZoom=1;
+  lbImg.src=allGalleryImages[idx];
+  lbCounter.textContent=(idx+1)+' / '+allGalleryImages.length;
+  lbImgWrap.style.transform='scale(1)';
+  lbOverlay.classList.add('lb-open');
+  void lbOverlay.offsetWidth;
+  lbOverlay.classList.add('lb-anim');
+  document.body.style.overflow='hidden';
+  document.documentElement.style.overflow='hidden';
+}
+function closeLb(){
+  lbOverlay.classList.remove('lb-anim');
+  lbOverlay.classList.remove('lb-open');
+  document.body.style.overflow='';
+  document.documentElement.style.overflow='';
+  lbImg.src='';
+}
+function navLb(dir){
+  lbIdx+=dir;
+  if(lbIdx<0)lbIdx=allGalleryImages.length-1;
+  else if(lbIdx>=allGalleryImages.length)lbIdx=0;
+  lbZoom=1;
+  lbImg.src=allGalleryImages[lbIdx];
+  lbImgWrap.style.transform='scale(1)';
+  lbCounter.textContent=(lbIdx+1)+' / '+allGalleryImages.length;
+}
+function zoomLb(dir){
+  lbZoom=Math.max(0.5,Math.min(5,lbZoom+dir*0.5));
+  lbImgWrap.style.transform='scale('+lbZoom+')';
+}
+
+document.getElementById('pdLbClose').addEventListener('click',closeLb);
+document.getElementById('pdLbPrev').addEventListener('click',function(){navLb(-1)});
+document.getElementById('pdLbNext').addEventListener('click',function(){navLb(1)});
+document.getElementById('pdZoomIn').addEventListener('click',function(){zoomLb(1)});
+document.getElementById('pdZoomOut').addEventListener('click',function(){zoomLb(-1)});
+lbOverlay.addEventListener('click',function(e){if(e.target===lbOverlay||e.target.classList.contains('lb-backdrop'))closeLb()});
+document.addEventListener('keydown',function(e){
+  if(!lbOverlay.classList.contains('lb-open'))return;
+  if(e.key==='Escape'){e.preventDefault();closeLb()}
+  else if(e.key==='ArrowLeft'){e.preventDefault();navLb(-1)}
+  else if(e.key==='ArrowRight'){e.preventDefault();navLb(1)}
+});
+lbOverlay.addEventListener('contextmenu',function(e){e.preventDefault()});
+lbOverlay.addEventListener('dragstart',function(e){e.preventDefault()});
+lbOverlay.addEventListener('selectstart',function(e){e.preventDefault()});
+lbOverlay.querySelector('.lb-img-wrap').addEventListener('wheel',function(e){
+  e.preventDefault();
+  zoomLb(e.deltaY<0?1:-1);
+},{passive:false});
+
+/* Touch swipe */
+var tx=0,ty=0,tdx=0,tdy=0;
+lbOverlay.addEventListener('touchstart',function(e){
+  if(e.touches.length===1){tx=e.touches[0].clientX;ty=e.touches[0].clientY;tdx=0}
+},{passive:true});
+lbOverlay.addEventListener('touchmove',function(e){
+  if(e.touches.length===1){tdx=e.touches[0].clientX-tx;tdy=e.touches[0].clientY-ty}
+},{passive:true});
+lbOverlay.addEventListener('touchend',function(){
+  if(Math.abs(tdx)>50&&Math.abs(tdx)>Math.abs(tdy)*2)navLb(tdx>0?-1:1);
+  tdx=0;tdy=0;
+},{passive:true});
+
+/* Load program */
+db.collection('programs').doc(programId).get().then(function(doc){
+  if(!doc.exists){document.getElementById('pdLoader').innerHTML='<p style="color:var(--red)">البرنامج غير موجود</p>';return}
+  var d=doc.data();
+
+  document.getElementById('pdLoader').style.display='none';
+  document.getElementById('pdContent').style.display='block';
+  document.getElementById('pdHeroImg').src=d.mainImage||'';
+  document.getElementById('pdHeroImg').alt=d.name||'';
+  document.getElementById('pdTitle').textContent=d.name||'';
+  document.title='تفاصيل '+(d.name||'')+' | بركات المناسك';
+
+  /* Info grid */
+  var infoHtml='';
+  if(d.price)infoHtml+='<div class="pd-info-card"><div class="pd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><h4>السعر</h4><p>'+esc(d.price)+'</p></div>';
+  if(d.duration)infoHtml+='<div class="pd-info-card"><div class="pd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h4>المدة</h4><p>'+esc(d.duration)+'</p></div>';
+  if(d.departureDate)infoHtml+='<div class="pd-info-card"><div class="pd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><h4>موعد الانطلاق</h4><p>'+esc(d.departureDate)+'</p></div>';
+  if(d.returnDate)infoHtml+='<div class="pd-info-card"><div class="pd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><h4>موعد العودة</h4><p>'+esc(d.returnDate)+'</p></div>';
+  if(d.days)infoHtml+='<div class="pd-info-card"><div class="pd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><h4>عدد الأيام</h4><p>'+esc(String(d.days))+'</p></div>';
+  if(d.nights)infoHtml+='<div class="pd-info-card"><div class="pd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></div><h4>عدد الليالي</h4><p>'+esc(String(d.nights))+'</p></div>';
+  if(d.seats)infoHtml+='<div class="pd-info-card"><div class="pd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><h4>عدد المقاعد</h4><p>'+esc(String(d.seats))+'</p></div>';
+  if(d.seatsLeft>=0)infoHtml+='<div class="pd-info-card"><div class="pd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><h4>المقاعد المتبقية</h4><p><strong style="color:var(--emerald)">'+esc(String(d.seatsLeft))+'</strong></p></div>';
+  document.getElementById('pdInfoGrid').innerHTML=infoHtml;
+
+  if(d.shortDesc||d.fullDesc){
+    document.getElementById('pdDescWrap').style.display='block';
+    document.getElementById('pdDesc').textContent=d.fullDesc||d.shortDesc;
+  }
+
+  /* Transport */
+  if(d.transport){
+    document.getElementById('pdTransportSection').style.display='block';
+    var t='';
+    var transLabels={'flight':'طيران','bus':'باصات VIP','mixed':'النقل المختلط'};
+    t+='<strong>طريقة النقل:</strong> '+(transLabels[d.transport]||d.transport);
+    if(d.airlines)t+='<br><strong>شركة الطيران:</strong> '+esc(d.airlines);
+    document.getElementById('pdTransport').innerHTML=t;
+  }
+
+  /* Hotels */
+  if(d.hotelMakkah||d.hotelMadinah){
+    document.getElementById('pdHotelSection').style.display='block';
+    var hh='';
+    if(d.hotelMakkah){
+      hh+='<div class="pd-info-card"><div class="pd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2z"/><path d="M9 22V12h6v10"/></svg></div><h4>فندق مكة</h4><p>'+esc(d.hotelMakkah)+'</p></div>';
+    }
+    if(d.hotelMadinah){
+      hh+='<div class="pd-info-card"><div class="pd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2z"/><path d="M9 22V12h6v10"/></svg></div><h4>فندق المدينة</h4><p>'+esc(d.hotelMadinah)+'</p></div>';
+    }
+    if(d.hotelStars){
+      hh+='<div class="pd-info-card"><div class="pd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><h4>مستوى الفندق</h4><p>'+esc(String(d.hotelStars))+' نجوم</p></div>';
+    }
+    if(d.meals){
+      hh+='<div class="pd-info-card"><div class="pd-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg></div><h4>الوجبات اليومية</h4><p>'+esc(d.meals)+'</p></div>';
+    }
+    document.getElementById('pdHotelGrid').innerHTML=hh;
+  }
+
+  /* Services */
+  if(d.servicesIncluded){
+    document.getElementById('pdServicesSection').style.display='block';
+    document.getElementById('pdServicesText').textContent=d.servicesIncluded;
+  }
+
+  /* WhatsApp */
+  var waText='أرغب بالاستفسار عن برنامج '+esc(d.name);
+  document.getElementById('pdWALink').href='https://wa.me/9647744641155?text='+encodeURIComponent(waText);
+
+  /* Notes */
+  if(d.notes){
+    document.getElementById('pdNotesSection').style.display='block';
+    document.getElementById('pdNotes').innerHTML=d.notes.replace(/\n/g,'<br>');
+  }
+
+  /* Timeline */
+  db.collection('programs').doc(programId).collection('timeline').orderBy('order','asc').get().then(function(snap){
+    if(snap.docs.length){
+      document.getElementById('pdTimelineSection').style.display='block';
+      var tl='';
+      snap.docs.forEach(function(tlDoc){
+        var t=tlDoc.data();
+        tl+='<div class="pd-tl-item"><div class="pd-tl-dot"></div>'
+          +'<h3 class="pd-tl-title"><span class="pd-tl-day">اليوم '+(t.day||'')+'</span>'+esc(t.title||'')+'</h3>'
+          +(t.description?'<p class="pd-tl-text">'+esc(t.description)+'</p>':'');
+        if(t.images&&t.images.length){
+          tl+='<div class="pd-tl-imgs">';
+          t.images.forEach(function(im){
+            allGalleryImages.push(im);
+            tl+='<img src="'+esc(im)+'" alt="" loading="lazy" onclick="pdOpenLb('+(allGalleryImages.length-1)+')">';
+          });
+          tl+='</div>';
+        }
+        tl+='</div>';
+      });
+      document.getElementById('pdTimeline').innerHTML=tl;
+    }
+  });
+
+  /* Gallery */
+  if(d.gallery&&d.gallery.length){
+    document.getElementById('pdGallerySection').style.display='block';
+    var gh='';
+    d.gallery.forEach(function(im,i){
+      allGalleryImages.push(im);
+      gh+='<img src="'+esc(im)+'" alt="'+esc(d.name)+'" loading="lazy" onclick="pdOpenLb('+(allGalleryImages.length-1)+')">';
+    });
+    document.getElementById('pdGallery').innerHTML=gh;
+  }
+}).catch(function(){
+  document.getElementById('pdLoader').innerHTML='<p style="color:var(--red)">خطأ في تحميل البرنامج</p>';
+});
+
+window.pdOpenLb=function(idx){openLb(idx)};
+
+})();
+</script>
+</body>
+</html>

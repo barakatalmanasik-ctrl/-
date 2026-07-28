@@ -91,7 +91,7 @@ select.form-input{cursor:pointer;appearance:auto}
 .stat-icon-avg{background:rgba(201,169,110,.12);color:var(--gold)}
 .stat-icon-services{background:rgba(27,42,74,.08);color:var(--navy)}
 .stat-icon-gallery{background:rgba(139,92,246,.1);color:#8B5CF6}
-.stat-icon-trips{background:rgba(16,185,129,.1);color:var(--emerald)}
+.stat-icon-trips{background:rgba(99,102,241,.1);color:#6366F1}
 .stat-num{font-family:var(--h);font-size:20px;font-weight:800;color:var(--g900);line-height:1}
 .stat-avg-label{font-size:12px;color:var(--g400);font-weight:400}
 .stat-avg-stars{display:flex;gap:1px;margin-top:4px}
@@ -300,4 +300,27 @@ select.form-input{cursor:pointer;appearance:auto}
 /* 768px-1023px Tablet */
 @media(min-width:768px) and (max-width:1023px){
   .admin-grid{grid-template-columns:1fr}
+}
+
+/* ═══ Program Form Modal ═══ */
+.prg-form-section-title{font-family:var(--h);font-size:15px;font-weight:700;color:var(--navy);padding:12px 0 8px;border-bottom:2px solid var(--gold);margin-bottom:12px;margin-top:4px}
+.prg-form-section-title:first-child{margin-top:0}
+#programModal .modal-card{max-width:800px!important}
+#programModal .modal-body{max-height:80vh;overflow-y:auto}
+.prg-add-img-row{display:flex;gap:8px;align-items:center}
+.prg-tl-day{border-right:3px solid var(--gold)!important}
+.prg-tl-day .modal-row{margin-bottom:8px}
+.prg-tl-day .modal-field{margin-bottom:6px}
+.prg-tl-day .modal-field label{font-size:11px}
+.prg-tl-day input,.prg-tl-day textarea{font-size:12px!important;padding:8px 10px!important}
+
+@media(max-width:767px){
+  #programModal .modal-card{max-width:100%!important;margin:0 8px}
+  #programModal .modal-row{grid-template-columns:1fr}
+  .prg-tl-day{padding:12px!important}
+  .prg-tl-day .modal-row{grid-template-columns:1fr}
+}
+@media(max-width:479px){
+  .prg-add-img-row{flex-direction:column}
+  .prg-add-img-row input{width:100%}
 }

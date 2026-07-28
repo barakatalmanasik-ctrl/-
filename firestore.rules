@@ -115,12 +115,20 @@ service cloud.firestore {
     }
 
     /* ═══════════════════════════════════════
-       TRIPS COLLECTION
+       PROGRAMS COLLECTION
+       Schema: programs/{id} = { name, price, duration, status, order, ... }
        Public read (active only), admin read/write all
+       Subcollection: programs/{id}/timeline/{dayId}
        ═══════════════════════════════════════ */
-    match /trips/{tripId} {
+    match /programs/{programId} {
       allow read: if resource.data.status == 'active' || isAdmin();
       allow create, update, delete: if isAdmin();
+
+      /* Timeline subcollection */
+      match /timeline/{dayId} {
+        allow read: if resource.data.status == 'active' || isAdmin();
+        allow create, update, delete: if isAdmin();
+      }
     }
 
     /* ═══════════════════════════════════════

@@ -92,11 +92,11 @@
     </div>
     <div class="stat-card stat-trips-card">
       <div class="stat-icon stat-icon-trips">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
       </div>
       <div class="stat-info">
-        <div class="stat-num" id="statTrips">0</div>
-        <div class="stat-label">الرحلات</div>
+        <div class="stat-num" id="statPrograms">0</div>
+        <div class="stat-label">البرامج</div>
       </div>
     </div>
   </div>
@@ -238,62 +238,20 @@
       </div>
     </div>
 
-    <!-- ═══ 5. Trips CMS Card ═══ -->
+    <!-- ═══ 5. Programs CMS Card ═══ -->
     <div class="admin-card">
       <div class="admin-card-header">
         <h2>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
-          إدارة الرحلات
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.5" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          إدارة البرامج
         </h2>
-        <button class="cms-add-btn" id="addTripBtn">
+        <button class="cms-add-btn" id="addProgramBtn">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          إضافة رحلة
+          إضافة برنامج
         </button>
       </div>
       <div class="admin-card-body">
-        <form class="cms-form" id="tripForm" style="display:none">
-          <input type="hidden" id="tripEditId" value="">
-          <div class="data-row">
-            <div class="data-field"><label>اسم الرحلة</label><input type="text" id="tripName" placeholder="عمرة رمضان 2026" required></div>
-            <div class="data-field"><label>المدة</label><input type="text" id="tripDuration" placeholder="10 أيام"></div>
-          </div>
-          <div class="data-row">
-            <div class="data-field"><label>تاريخ الانطلاق</label><input type="text" id="tripDate" placeholder="2026-03-01"></div>
-            <div class="data-field"><label>السعر</label><input type="text" id="tripPrice" placeholder="1,500,000 د.ع"></div>
-          </div>
-          <div class="data-row">
-            <div class="data-field"><label>الفندق</label><input type="text" id="tripHotel" placeholder="فندق 5 نجوم"></div>
-            <div class="data-field"><label>المقاعد المتبقية</label><input type="number" id="tripSeats" value="0" min="0"></div>
-          </div>
-          <div class="data-field"><label>البرنامج</label><textarea id="tripProgram" rows="2" placeholder="وصف البرنامج اليومي..."></textarea></div>
-          <div class="data-field">
-            <label>صورة الرحلة</label>
-            <div class="upload-zone upload-zone-sm" id="tripUploadZone">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              <p>اسحب الصورة هنا أو انقر</p>
-              <input type="file" id="tripUploadInput" class="upload-input" accept="image/*">
-            </div>
-            <img id="tripPreview" class="gal-preview-img" style="display:none" alt="معاينة">
-          </div>
-          <div class="data-row">
-            <div class="data-field"><label>رابط الصورة (بديل)</label><input type="url" id="tripImageUrl" placeholder="https://..."></div>
-            <div class="data-field"><label>حالة الرحلة</label>
-              <select id="tripTripStatus"><option value="available">متاح</option><option value="full">مكتمل</option><option value="unavailable">غير متاح</option></select>
-            </div>
-          </div>
-          <div class="data-row">
-            <div class="data-field"><label>الترتيب</label><input type="number" id="tripOrder" value="0" min="0"></div>
-            <div class="data-field"><label>الحالة</label>
-              <select id="tripStatus"><option value="active">نشط</option><option value="inactive">غير نشط</option></select>
-            </div>
-          </div>
-          <div class="cms-form-actions">
-            <button type="button" class="modal-btn modal-btn-cancel" onclick="document.getElementById('tripForm').style.display='none'">إلغاء</button>
-            <button type="button" class="modal-btn cms-preview-btn" id="tripPreviewBtn">معاينة</button>
-            <button type="submit" class="modal-btn modal-btn-save">حفظ</button>
-          </div>
-        </form>
-        <div class="comment-list" id="tripList">
+        <div class="comment-list" id="programList">
           <div class="comment-empty">جاري التحميل...</div>
         </div>
       </div>
@@ -392,6 +350,121 @@
       </button>
     </div>
     <div class="modal-body" id="previewBody"></div>
+  </div>
+</div>
+
+<!-- ═══ Program Modal ═══ -->
+<div class="modal-overlay" id="programModal">
+  <div class="modal-card" style="max-width:800px">
+    <div class="modal-header">
+      <h3 id="programModalTitle">إضافة برنامج جديد</h3>
+      <button class="modal-close" id="programModalClose" aria-label="إغلاق">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <form class="modal-body" id="programForm">
+      <input type="hidden" id="prgEditId" value="">
+
+      <h4 class="prg-form-section-title">المعلومات الأساسية</h4>
+      <div class="modal-row">
+        <div class="modal-field"><label>اسم البرنامج</label><input type="text" id="prgName" required></div>
+        <div class="modal-field"><label>السعر</label><input type="text" id="prgPrice" placeholder="1,500,000 د.ع"></div>
+      </div>
+      <div class="modal-field"><label>الوصف المختصر</label><input type="text" id="prgShortDesc"></div>
+      <div class="modal-field"><label>الوصف الكامل</label><textarea id="prgFullDesc" rows="3"></textarea></div>
+      <div class="modal-row">
+        <div class="modal-field"><label>المدة</label><input type="text" id="prgDuration" placeholder="10 أيام"></div>
+        <div class="modal-field"><label>موعد الانطلاق</label><input type="text" id="prgDepartureDate" placeholder="2026-03-01"></div>
+      </div>
+      <div class="modal-row">
+        <div class="modal-field"><label>موعد العودة</label><input type="text" id="prgReturnDate" placeholder="2026-03-10"></div>
+        <div class="modal-field"><label>عدد الأيام</label><input type="number" id="prgDays" min="0"></div>
+      </div>
+      <div class="modal-row">
+        <div class="modal-field"><label>عدد الليالي</label><input type="number" id="prgNights" min="0"></div>
+        <div class="modal-field"><label>عدد المقاعد</label><input type="number" id="prgSeats" min="0"></div>
+      </div>
+      <div class="modal-row">
+        <div class="modal-field"><label>المقاعد المتبقية</label><input type="number" id="prgSeatsLeft" min="0"></div>
+        <div class="modal-field"><label>الترتيب</label><input type="number" id="prgOrder" value="0" min="0"></div>
+      </div>
+      <div class="modal-row">
+        <div class="modal-field"><label>حالة البرنامج</label>
+          <select id="prgProgramStatus">
+            <option value="available">متاح للحجز</option>
+            <option value="almost_full">المقاعد أوشكت على النفاد</option>
+            <option value="full">اكتمل العدد</option>
+            <option value="coming_soon">قريباً</option>
+            <option value="ended">انتهى البرنامج</option>
+          </select>
+        </div>
+        <div class="modal-field"><label>حالة النشر</label>
+          <select id="prgStatus"><option value="active">نشط</option><option value="inactive">غير نشط</option></select>
+        </div>
+      </div>
+
+      <h4 class="prg-form-section-title">النقل والإقامة</h4>
+      <div class="modal-row">
+        <div class="modal-field"><label>طريقة النقل</label>
+          <select id="prgTransport">
+            <option value="">اختر...</option>
+            <option value="flight">طيران</option>
+            <option value="bus">باصات VIP</option>
+            <option value="mixed">النقل المختلط</option>
+          </select>
+        </div>
+        <div class="modal-field"><label>شركة الطيران</label><input type="text" id="prgAirlines" placeholder="الخطوط الجوية..."></div>
+      </div>
+      <div class="modal-row">
+        <div class="modal-field"><label>فندق مكة</label><input type="text" id="prgHotelMakkah"></div>
+        <div class="modal-field"><label>فندق المدينة</label><input type="text" id="prgHotelMadinah"></div>
+      </div>
+      <div class="modal-row">
+        <div class="modal-field"><label>مستوى الفندق</label>
+          <select id="prgHotelStars">
+            <option value="">اختر...</option>
+            <option value="3">3 نجوم</option>
+            <option value="4">4 نجوم</option>
+            <option value="5">5 نجوم</option>
+          </select>
+        </div>
+        <div class="modal-field"><label>عدد الوجبات اليومية</label><input type="text" id="prgMeals" placeholder="3 وجبات"></div>
+      </div>
+
+      <h4 class="prg-form-section-title">الخدمات والملاحظات</h4>
+      <div class="modal-field"><label>الخدمات المشمولة</label><textarea id="prgServicesIncluded" rows="4" placeholder="أدرج الخدمات المشمولة في البرنامج..."></textarea></div>
+      <div class="modal-field"><label>ملاحظات الشركة</label><textarea id="prgNotes" rows="3"></textarea></div>
+
+      <h4 class="prg-form-section-title">الصور</h4>
+      <div class="modal-row">
+        <div class="modal-field"><label>رابط الصورة الرئيسية</label><input type="url" id="prgMainImage" placeholder="https://..."></div>
+      </div>
+      <div class="modal-field">
+        <label>معرض صور البرنامج</label>
+        <div id="prgGalleryList">
+          <div class="prg-gallery-empty" style="color:var(--g400);font-size:13px;margin-bottom:8px">لا توجد صور مضافة. أضف روابط الصور أدناه.</div>
+        </div>
+        <div class="prg-add-img-row">
+          <input type="url" id="prgGalleryInput" placeholder="أضف رابط صورة..." style="flex:1;padding:8px 12px;border:1.5px solid var(--g200);border-radius:var(--r-sm);font-size:13px">
+          <button type="button" id="prgAddGalleryBtn" class="modal-btn modal-btn-save" style="padding:8px 16px;font-size:12px">إضافة</button>
+        </div>
+      </div>
+
+      <h4 class="prg-form-section-title">خارطة البرنامج (Timeline)</h4>
+      <div id="prgTimelineDays">
+        <div class="prg-tl-empty" style="color:var(--g400);font-size:13px;margin-bottom:8px">لا توجد أيام مضافة. أضف الأيام باستخدام الزر أدناه.</div>
+      </div>
+      <button type="button" id="prgAddDayBtn" class="modal-btn modal-btn-save" style="margin-bottom:12px">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        إضافة يوم جديد
+      </button>
+
+      <div class="modal-actions">
+        <button type="button" class="modal-btn modal-btn-cancel" id="programCancelBtn">إلغاء</button>
+        <button type="button" class="modal-btn cms-preview-btn" id="prgPreviewBtn">معاينة</button>
+        <button type="submit" class="modal-btn modal-btn-save">حفظ البرنامج</button>
+      </div>
+    </form>
   </div>
 </div>
 
