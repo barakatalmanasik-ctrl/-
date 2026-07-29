@@ -393,7 +393,8 @@ function renderCards(list,isFirestore){
   list.forEach(function(item,i){
     var d=isFirestore?item.data:item;
     var pst=d.programStatus||'available';
-    var imgUrl=d.mainImage||d.img||'';
+    var imgSrc=d.mainImage||d.img;
+    var imgUrl=imgSrc?imgSrc+'?v='+Date.now():'';
 
     var showBadge=(pst==='coming_soon'||pst==='almost_full');
     var badgeText=(pst==='coming_soon'?'قريباً':(pst==='almost_full'?'اقترب موعد الانطلاق':''));
@@ -424,25 +425,31 @@ function renderCards(list,isFirestore){
 
     var cardImg=card.querySelector('.prg-img-wrap img');
     if(cardImg&&imgUrl){
-      cardImg.onerror=function(){
-        console.warn('⚠️ برنامج "'+d.name+'" — صورة الغلاف غير موجودة:',this.src);
-        this.style.display='none';
-      };
+      cardImg.onerror=(function(name){
+        return function(){
+          console.warn('⚠️ برنامج "'+name+'" — صورة الغلاف غير موجودة:',this.src);
+          this.style.display='none';
+        };
+      })(d.name);
     }
 
     var detailsBtn=card.querySelector('.prg-details-btn');
     var bookingBtn=card.querySelector('.prg-booking-btn');
 
-    detailsBtn.addEventListener('click',function(e){
-      e.stopPropagation();
-      if(isFirestore)openProgramModal(item.id);
-      else openProgramModalFB(i);
-    });
-    if(!bookingDisabled){
-      bookingBtn.addEventListener('click',function(e){
+    detailsBtn.addEventListener('click',(function(idx,fs,itm){
+      return function(e){
         e.stopPropagation();
-        openBookingWA(d.name||'');
-      });
+        if(fs)openProgramModal(itm.id);
+        else openProgramModalFB(idx);
+      };
+    })(i,isFirestore,item));
+    if(!bookingDisabled){
+      bookingBtn.addEventListener('click',(function(nm){
+        return function(e){
+          e.stopPropagation();
+          openBookingWA(nm||'');
+        };
+      })(d.name));
     }
 
     grid.appendChild(card);
