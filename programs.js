@@ -30,7 +30,7 @@ var FALLBACK_PROGRAMS=[
     departure:'كل سبت وخميس',
     shortDesc:'رحلة دينية سياحية إلى شمال إيران (رشت، فومن، قلعة رودخان، ماسولة، بندر انزلي) ومدينة مشهد المقدسة وقم. المسار: رشت - فومن - قلعة رودخان - ماسولة - بندر انزلي - مشهد - قم.',
     price:'للاستفسار عن السعر مراسلتنا',
-    img:'images/صورة الشركة.png',
+    img:'images/برنامج ايران جوا.png',
     programStatus:'available',
     transport:'flight',
     meals:'اختياري (3 وجبات بوفيه +100 دولار)',
@@ -73,7 +73,7 @@ var FALLBACK_PROGRAMS=[
     departure:'كل سبت وخميس',
     shortDesc:'رحلة برية دينية سياحية إلى قم، مشهد ونيشابور بباصات VIP حديثة ومكيفة. تشمل 3 وجبات طعام في كل المناطق.',
     price:'للاستفسار عن السعر مراسلتنا',
-    img:'images/صورة الشركة.png',
+    img:'images/برنامج ايران برا .png',
     programStatus:'available',
     transport:'bus',
     meals:'3 وجبات يومياً',
@@ -116,7 +116,7 @@ var FALLBACK_PROGRAMS=[
     departure:'كل أسبوع',
     shortDesc:'رحلة عمرة مع شركة بركات المناسك. 7 ليالي في مكة المكرمة (منطقة محبس الجن) و3 ليالي في المدينة المنورة (مركزية). تشمل تذكرة طيران وإقامة في فنادق 4 نجوم وجميع التنقلات.',
     price:'للاستفسار عن السعر مراسلتنا',
-    img:'images/صورة الشركة.png',
+    img:'images/برنامج العمرة.png',
     programStatus:'available',
     transport:'flight',
     meals:'بوفيه مفتوح',
@@ -155,8 +155,13 @@ var FALLBACK_PROGRAMS=[
 
 /* ── Shared: populate modal from data object ── */
 function populateModal(d,fallbackIdx){
-  document.getElementById('pmHeroImg').src=d.img||d.mainImage||'images/صورة الشركة.png';
-  document.getElementById('pmHeroImg').alt=d.name||'';
+  var heroImg=document.getElementById('pmHeroImg');
+  heroImg.src=d.img||d.mainImage||'';
+  heroImg.alt=d.name||'';
+  heroImg.onerror=function(){
+    console.warn('⚠️ صورة البرنامج غير موجودة في المودال:',d.name);
+    this.style.display='none';
+  };
   document.getElementById('pmName').textContent=d.name||'';
   var badge=document.getElementById('pmStatusBadge');
   var pst=d.programStatus||'available';
@@ -388,7 +393,7 @@ function renderCards(list,isFirestore){
   list.forEach(function(item,i){
     var d=isFirestore?item.data:item;
     var pst=d.programStatus||'available';
-    var imgUrl=d.mainImage||d.img||'images/صورة الشركة.png';
+    var imgUrl=d.mainImage||d.img||'';
 
     var showBadge=(pst==='coming_soon'||pst==='almost_full');
     var badgeText=(pst==='coming_soon'?'قريباً':(pst==='almost_full'?'اقترب موعد الانطلاق':''));
@@ -416,6 +421,14 @@ function renderCards(list,isFirestore){
       +'<button class="prg-action-btn prg-booking-btn '+bookingClass+'"'+(bookingDisabled?' disabled':'')+'>'+bookingText+'</button>'
       +'</div>'
       +'</div>';
+
+    var cardImg=card.querySelector('.prg-img-wrap img');
+    if(cardImg&&imgUrl){
+      cardImg.onerror=function(){
+        console.warn('⚠️ برنامج "'+d.name+'" — صورة الغلاف غير موجودة:',this.src);
+        this.style.display='none';
+      };
+    }
 
     var detailsBtn=card.querySelector('.prg-details-btn');
     var bookingBtn=card.querySelector('.prg-booking-btn');
