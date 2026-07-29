@@ -472,23 +472,83 @@
   </div>
 </div>
 
-<!-- Program Detail Modal -->
+<!-- Program Detail Modal (upgraded) -->
 <div class="pm-overlay" id="programModal">
   <div class="pm-modal">
     <button class="pm-close" aria-label="إغلاق">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
-    <div class="pm-header">
-      <h3 id="pmName" class="pm-title"></h3>
-      <div class="pm-meta">
-        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span id="pmDuration"></span></span>
-        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span id="pmDeparture"></span></span>
+
+    <div class="pm-hero">
+      <img id="pmHeroImg" src="" alt="">
+      <div class="pm-hero-overlay"></div>
+      <div class="pm-hero-content">
+        <h2 id="pmName" class="pm-title"></h2>
+        <span id="pmStatusBadge" class="pm-badge prg-badge-avail"></span>
       </div>
     </div>
-    <div class="pm-body" id="pmDesc"></div>
-    <div class="pm-footer">
-      <span class="pm-price" id="pmPrice"></span>
-      <a id="pmWALink" href="#" class="btn btn-accent" target="_blank" rel="noopener">استفسار عن البرنامج</a>
+
+    <div class="pm-main">
+
+      <div class="pm-meta-grid">
+        <div class="pm-meta-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="pm-meta-lbl">المدة</span>
+          <span class="pm-meta-val" id="pmDuration"></span>
+        </div>
+        <div class="pm-meta-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span class="pm-meta-lbl">الانطلاق</span>
+          <span class="pm-meta-val" id="pmDeparture"></span>
+        </div>
+        <div class="pm-meta-item" id="pmTransportRow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 17v1c0 .5-.5 1-1 1H3c-.5 0-1-.5-1-1v-1"/><path d="M2 17V7c0-.5.5-1 1-1h10l4 4h4c.5 0 1 .5 1 1v6"/><circle cx="6" cy="17" r="2"/><circle cx="18" cy="17" r="2"/></svg>
+          <span class="pm-meta-lbl">النقل</span>
+          <span class="pm-meta-val" id="pmTransport"></span>
+        </div>
+        <div class="pm-meta-item" id="pmMealsRow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          <span class="pm-meta-lbl">الوجبات</span>
+          <span class="pm-meta-val" id="pmMeals"></span>
+        </div>
+        <div class="pm-meta-item pm-meta-full" id="pmHotelsRow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21V7a2 2 0 012-2h4a2 2 0 012 2v14"/><path d="M21 21V3a2 2 0 00-2-2H9a2 2 0 00-2 2v18"/><line x1="7" y1="7" x2="11" y2="7"/><line x1="7" y1="11" x2="11" y2="11"/><line x1="7" y1="15" x2="11" y2="15"/><line x1="15" y1="9" x2="17" y2="9"/><line x1="15" y1="13" x2="17" y2="13"/></svg>
+          <span class="pm-meta-lbl">الفنادق</span>
+          <span class="pm-meta-val" id="pmHotels"></span>
+        </div>
+      </div>
+
+      <div class="pm-section">
+        <h3 class="pm-section-title">وصف البرنامج</h3>
+        <div class="pm-body-text" id="pmDesc"></div>
+      </div>
+
+      <div class="pm-section" id="pmServicesSection" style="display:none">
+        <h3 class="pm-section-title">الخدمات المشمولة</h3>
+        <div class="pm-body-text pm-services-list" id="pmServices"></div>
+      </div>
+
+      <div class="pm-section" id="pmTimelineSection" style="display:none">
+        <h3 class="pm-section-title">البرنامج التفصيلي</h3>
+        <div class="pm-timeline" id="pmTimeline"></div>
+      </div>
+
+      <div class="pm-section" id="pmGallerySection" style="display:none">
+        <h3 class="pm-section-title">معرض الصور</h3>
+        <div class="pm-gallery-grid" id="pmGalleryGrid"></div>
+      </div>
+
+      <div class="pm-section" id="pmNotesSection" style="display:none">
+        <h3 class="pm-section-title">ملاحظات</h3>
+        <div class="pm-body-text pm-notes-text" id="pmNotes"></div>
+      </div>
+
+      <div class="pm-actions">
+        <span class="pm-price-display" id="pmPrice"></span>
+        <div class="pm-btns">
+          <a id="pmWALink" href="#" class="btn btn-accent" target="_blank" rel="noopener">استفسار عن البرنامج</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>

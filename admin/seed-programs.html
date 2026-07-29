@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html dir="rtl"><head><meta charset="utf-8"><title>Seeding Programs</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+</head><body style="font-family:sans-serif;padding:40px;text-align:center">
+<h2>جاري نقل البرامج إلى قاعدة البيانات...</h2>
+<div id="status" style="margin-top:20px;font-size:14px;color:#666"></div>
+<script>
+const firebaseConfig = {apiKey:"AIzaSyD3nB9ZJdl0nunwcLY3Tvy04sbl1v-VnrE",authDomain:"barakat-al-manasik.firebaseapp.com",projectId:"barakat-al-manasik",storageBucket:"barakat-al-manasik.firebasestorage.app",messagingSenderId:"320884563902",appId:"1:320884563902:web:e811a2ca40234d698ee3ef"};
+firebase.initializeApp(firebaseConfig);
+var db=firebase.firestore();
+var statusEl=document.getElementById('status');
+
+var programsData=[
+  {
+    name:'برنامج إيران جواً',
+    price:'للاستفسار عن السعر مراسلتنا',
+    shortDesc:'رحلة دينية سياحية إلى شمال إيران (رشت، فومن، قلعة رودخان، ماسولة، بندر انزلي) ومدينة مشهد المقدسة وقم. المسار: رشت - فومن - قلعة رودخان - ماسولة - بندر انزلي - مشهد - قم.',
+    fullDesc:'برنامج شمال إيران (مدينة رشت وما حولها)\nالفنادق المتاحة للإقامة:\n• فندق آرام (ثلاث نجوم) في مدينة فومن\n• أو فندق خَزَر (أربع نجوم) في مدينة رودسر\n\nبرنامج مدينة مشهد المقدسة\nمكان الإقامة: فندق انتخاب (أربع نجوم)\n\nمدينة قم\n',
+    duration:'9 ليالي / 11 يوم',
+    departureDate:'كل سبت وخميس',
+    programStatus:'available',
+    status:'active',
+    transport:'flight',
+    hotelStars:4,
+    meals:'اختياري (3 وجبات بوفيه +100 دولار)',
+    servicesIncluded:'• تذكرة طيران ذهاب وإياب\n• الإقامة في فنادق 3-4 نجوم\n• جولات سياحية حسب البرنامج\n• مرشد سياحي',
+    notes:'• في حالة رغبة المسافر في الحصول على الطعام (ثلاث وجبات بنظام بوفيه) داخل الفندق، يضاف مبلغ 100 دولار.\n• في حال ترك المسافر للجروب لأي سبب كان، لا يتم إرجاع المبلغ له.',
+    mainImage:'images/صورة الشركة.png',
+    days:11,nights:9,order:0,seats:50,seatsLeft:45,gallery:[],
+    timeline:[
+      {day:1,title:'الوصول إلى رشت',description:'الوصول إلى مدينة رشت وتسليم الغرف بعد الساعة 2 ظهراً، وبعدها الذهاب في جولة سياحية في الأسواق المحلية.'},
+      {day:2,title:'قلعة رودخان',description:'الانطلاق صباحاً في جولات سياحية إلى قلعة رودخان، الصعود إلى أعلى القلعة والتمتع بالمناظر الخلابة والمياه الجارية من أعلى.'},
+      {day:3,title:'ماسولة وبندر انزلي',description:'صباحاً: الانطلاق إلى قرية ماسولة الجبلية والاستمتاع بالسير في أزقتها الحجرية الفريدة.\nعصراً: الذهاب إلى مدينة بندر انزلي السياحية وركوب القارب السريع داخل مستنقع انزلي (التالاب) لرؤية زهور اللوتس المائية والطيور المهاجرة.'},
+      {day:4,title:'مشهد - الوصول',description:'الوصول إلى مدينة مشهد المقدسة. استلام الغرف وبعدها التوجه لزيارة الإمام علي بن موسى الرضا (عليه السلام).'},
+      {day:5,title:'جولة في طرقبة',description:'الذهاب صباحاً في جولة سياحية في مدينة طرقبة (جايدراه) والتمتع بالألعاب، ومن ثم الذهاب إلى مطعم عنبران (بلبل) لتناول وجبة الغداء، ثم التوجه إلى حديقة وكيل آباد وحديقة الحيوانات.'},
+      {day:6,title:'حديقة بارك ملت',description:'الذهاب صباحاً إلى حديقة بارك ملت، وعصراً رحلة اختيارية (حسب رغبة المسافر) إلى المدينة المائية.'},
+      {day:7,title:'باغ مشهد',description:'الذهاب إلى حديقة باغ مشهد لمشاهدة أجمل المناظر والاستمتاع بالألعاب، وبعدها وقت حر للمسافرين.'},
+      {day:8,title:'قم - الوصول',description:'الوصول إلى مدينة قم. استراحة وبعدها زيارة السيدة معصومة (عليها السلام).'},
+      {day:9,title:'بيت النور وجمكران',description:'زيارة بيت النور وجمكران.'},
+      {day:10,title:'مغادرة قم',description:'مغادرة قم والعودة إلى أرض الوطن.'}
+    ]
+  },
+  {
+    name:'برنامج إيران براً',
+    price:'للاستفسار عن السعر مراسلتنا',
+    shortDesc:'رحلة برية دينية سياحية إلى قم، مشهد ونيشابور بباصات VIP حديثة ومكيفة. تشمل 3 وجبات طعام في كل المناطق.',
+    fullDesc:'رحلة إلى قم .. مشهد .. نيشابور\nمدة الرحلة: 11 يوماً\nقم: 3 ليالي (4 أيام) مع طعام 3 وجبات\nمشهد: 3 ليالي (4 أيام) مع طعام 3 وجبات\nالمواصلات: باصات VIP حديثة ومكيفة',
+    duration:'11 يوم',
+    departureDate:'كل سبت وخميس',
+    programStatus:'available',
+    status:'active',
+    transport:'bus',
+    hotelStars:3,
+    meals:'3 وجبات يومياً',
+    servicesIncluded:'• النقل بباصات VIP حديثة ومكيفة\n• الإقامة مع 3 وجبات طعام\n• مشرف طوال الرحلة\n• مترجم للمراجعة في الأمور الطبية مجاناً',
+    notes:'• النقل باصات حديثة ومكيفة VIP رجال أعمال.\n• السكن ثلاثي ورباعي، ومن يرغب بغرفة مزدوجة إضافة 50 ألف للنفر، غرفة سنكل 100 ألف.\n• استلام الغرف الساعة 1 ظهراً لغرض التنظيف.\n• عند تسليم الجواز للشركة لا يجوز سحبه، وعند سحبه يستقطع نصف المبلغ بسبب الحجز المسبق.\n• الشركة توفر مترجم للمراجعة في الأمور الطبية مجاناً.',
+    mainImage:'images/صورة الشركة.png',
+    days:11,nights:10,order:1,seats:50,seatsLeft:50,gallery:[],
+    timeline:[
+      {day:1,title:'التجمع والانطلاق',description:'التجمع عند باب الشركة والانطلاق نحو الحدود العراقية الإيرانية ومنها إلى مدينة قم المقدسة.'},
+      {day:2,title:'الوصول إلى قم',description:'الوصول إلى قم واستلام الغرف.'},
+      {day:3,title:'مزارات قم',description:'التجمع داخل صالة الفندق والخروج لأداء المزارات: مسجد جمكران، مقام الإمام المهدي (عجل الله فرجه الشريف) وبئر الأمنيات.'},
+      {day:4,title:'التوجه إلى مشهد',description:'تسليم الغرف والاتجاه إلى مدينة مشهد المقدسة.'},
+      {day:5,title:'مشهد - الوصول',description:'الوصول، استلام الغرف والاستراحة، وعصراً الخروج لزيارة الإمام الرضا (عليه السلام).'},
+      {day:6,title:'زيارة ياسر وناصر',description:'التوجه لزيارة ياسر وناصر، وشراء العسل الطبيعي، باغ وحش، باغ مشهد، حديقة الدينصورات، كوسنگي.'},
+      {day:7,title:'يوم حر',description:'يوم حر لكم.'},
+      {day:8,title:'العودة إلى قم عبر نيشابور',description:'تسليم الغرف والتوجه إلى مدينة قم المقدسة مروراً بمدينة نيشابور لزيارة قدم الإمام الرضا (عليه السلام) وأخذ الماء المبارك من العين التي انبثقت تحت قدمه الشريفة.'},
+      {day:9,title:'قم - استراحة',description:'الوصول إلى مدينة قم المقدسة، استلام الغرف والاستراحة، وعصراً جولة حرة للتسوق.'},
+      {day:10,title:'زيارة الوداع',description:'صباحاً زيارة الوداع لحرم السيدة معصومة (عليها السلام)، وبعد الظهر تسليم الغرف والتوجه إلى أرض الوطن.'},
+      {day:11,title:'العودة إلى الوطن',description:'الوصول إلى أرض الوطن.'}
+    ]
+  },
+  {
+    name:'برنامج العمرة',
+    price:'للاستفسار عن السعر مراسلتنا',
+    shortDesc:'رحلة عمرة مع شركة بركات المناسك. 7 ليالي في مكة المكرمة (منطقة محبس الجن) و3 ليالي في المدينة المنورة (مركزية). تشمل تذكرة طيران وإقامة في فنادق 4 نجوم وجميع التنقلات.',
+    fullDesc:'🕋 رحلة العمرة المباركة\nمع شركة بركات المناسك للسفر والسياحة\nرحلات طيران - كل أسبوع\nالإقامة في فنادق راقية ومميزة\nالمدينة المنورة: 3 ليالي - سكن في المدينة مركزية\nمكة المكرمة: 7 ليالي - منطقة محبس الجن',
+    duration:'10 ليالي',
+    departureDate:'كل أسبوع',
+    programStatus:'available',
+    status:'active',
+    transport:'flight',
+    airlines:'خطوط الطيران',
+    hotelMakkah:'ميسان الملتزم / تاج بارك / الجزيرة (منطقة محبس الجن)',
+    hotelMadinah:'فندق في المنطقة المركزية',
+    hotelStars:4,
+    meals:'بوفيه مفتوح',
+    servicesIncluded:'• تذكرة الطائرة ذهاب وإياب\n• الإقامة في مستوى فنادق 4 نجوم مميزة\n• جميع التنقلات السياحية والدينية بين مكة والمدينة\n• إشراف كامل على مدار الرحلة\n• كادر إداري\n• زيارة جميع المزارات الدينية في مكة والمدينة\n• إرشاد ديني متخصص معكم طوال الرحلة\n\n🎁 هدايا مجانية لكل معتمر:\n• حقيبة سفر كبيرة + حقيبة يد كتف\n• إحرام رجالي + وشاح نسائي\n• شفقات رجالية ونسائية',
+    notes:'• رحلات البر متوفرة أيضاً بأسعار تنافسية',
+    mainImage:'images/صورة الشركة.png',
+    days:10,nights:10,order:2,seats:100,seatsLeft:80,gallery:[],
+    timeline:[
+      {day:1,title:'المغادرة إلى المدينة',description:'المغادرة من أرض الوطن إلى المدينة المنورة.'},
+      {day:2,title:'المدينة المنورة',description:'الوصول إلى المدينة المنورة واستلام الغرف وزيارة المسجد النبوي الشريف.'},
+      {day:3,title:'المدينة - مزارات',description:'زيارة المزارات الدينية في المدينة المنورة.'},
+      {day:4,title:'التوجه إلى مكة',description:'التوجه إلى مكة المكرمة والاستعداد للعمرة.'},
+      {day:5,title:'مكة المكرمة',description:'أداء مناسك العمرة والطواف والسعي.'},
+      {day:6,title:'مكة - مزارات',description:'زيارة المزارات الدينية في مكة المكرمة.'},
+      {day:7,title:'مكة - عبادة',description:'وقت حر للعبادة والتسوق.'},
+      {day:8,title:'مكة - عبادة',description:'وقت حر للعبادة.'},
+      {day:9,title:'الاستعداد للعودة',description:'الاستعداد للعودة إلى أرض الوطن.'},
+      {day:10,title:'العودة',description:'العودة إلى أرض الوطن.'}
+    ]
+  }
+];
+
+var processed=0;
+function addProgram(p,idx){
+  var data={
+    name:p.name,price:p.price,shortDesc:p.shortDesc,fullDesc:p.fullDesc,
+    duration:p.duration,departureDate:p.departureDate,
+    programStatus:p.programStatus,status:p.status,
+    transport:p.transport,airlines:p.airlines||'',
+    hotelMakkah:p.hotelMakkah||'',hotelMadinah:p.hotelMadinah||'',
+    hotelStars:p.hotelStars||0,meals:p.meals||'',
+    servicesIncluded:p.servicesIncluded||'',notes:p.notes||'',
+    mainImage:p.mainImage,gallery:p.gallery||[],
+    days:p.days||0,nights:p.nights||0,
+    order:p.order,seats:p.seats||0,seatsLeft:p.seatsLeft||0,
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+  db.collection('programs').add(data).then(function(ref){
+    var batch=db.batch();
+    (p.timeline||[]).forEach(function(tl,i){
+      var tlRef=ref.collection('timeline').doc();
+      batch.set(tlRef,{day:tl.day,title:tl.title,description:tl.description,images:tl.images||[],order:i});
+    });
+    return batch.commit().then(function(){
+      processed++;
+      statusEl.innerHTML+='<br>✅ تمت إضافة: '+p.name;
+      if(processed===programsData.length){
+        statusEl.innerHTML+='<br><br><strong style="color:green;">تم نقل جميع البرامج بنجاح! يمكنك إغلاق هذه الصفحة.</strong>';
+      }
+    });
+  }).catch(function(e){
+    statusEl.innerHTML+='<br>❌ خطأ: '+e.message;
+  });
+}
+
+statusEl.textContent='جاري البدء...';
+programsData.forEach(function(p,i){setTimeout(function(){addProgram(p,i)},i*500)});
+</script></body></html>
