@@ -232,8 +232,37 @@ function populateModal(d,fallbackIdx){
   }else notesSec.style.display='none';
 
   document.getElementById('pmPrice').textContent=d.price||'للاستفسار عن السعر';
-  var w='أرغب بالاستفسار عن '+esc(d.name||'');
-  document.getElementById('pmWALink').href='https://wa.me/9647744641155?text='+encodeURIComponent(w);
+
+  var msg='السلام عليكم\nأرغب بحجز:\n'+(d.name||'')+'\nالاسم:\nرقم الهاتف:\nعدد المسافرين:\nوشكراً.';
+  document.getElementById('pmWALink').href='https://wa.me/9647744641155?text='+encodeURIComponent(msg);
+
+  var pst=d.programStatus||'available';
+  var waBtn=document.getElementById('pmWALink');
+  if(pst==='full'||pst==='ended'){
+    waBtn.textContent='اكتملت المقاعد';
+    waBtn.classList.remove('btn-accent');
+    waBtn.classList.add('btn-disabled');
+    waBtn.removeAttribute('href');
+    waBtn.style.pointerEvents='none';
+    waBtn.style.background='var(--g400)';
+    waBtn.style.cursor='not-allowed';
+  }else if(pst==='coming_soon'){
+    waBtn.textContent='قريباً';
+    waBtn.classList.remove('btn-accent');
+    waBtn.classList.add('btn-disabled');
+    waBtn.removeAttribute('href');
+    waBtn.style.pointerEvents='none';
+    waBtn.style.background='var(--gold)';
+    waBtn.style.cursor='not-allowed';
+  }else{
+    waBtn.textContent='استفسار عن البرنامج';
+    waBtn.classList.add('btn-accent');
+    waBtn.classList.remove('btn-disabled');
+    waBtn.href='https://wa.me/9647744641155?text='+encodeURIComponent(msg);
+    waBtn.style.pointerEvents='';
+    waBtn.style.background='';
+    waBtn.style.cursor='';
+  }
 
   var overlay=document.getElementById('programModal');
   overlay.classList.add('show');
@@ -345,6 +374,12 @@ function trySeedFirestore(){
   });
 }
 
+/* ── WhatsApp booking helper ── */
+function openBookingWA(name){
+  var msg='السلام عليكم\nأرغب بحجز:\n'+(name||'')+'\nالاسم:\nرقم الهاتف:\nعدد المسافرين:\nوشكراً.';
+  window.open('https://wa.me/9647744641155?text='+encodeURIComponent(msg),'_blank');
+}
+
 /* ── Render cards ── */
 function renderCards(list,isFirestore){
   var grid=document.getElementById('programsGrid');
@@ -353,16 +388,21 @@ function renderCards(list,isFirestore){
   list.forEach(function(item,i){
     var d=isFirestore?item.data:item;
     var pst=d.programStatus||'available';
-    var badgeLabel=pstLabels[pst]||'متاح للحجز';
     var imgUrl=d.mainImage||d.img||'images/صورة الشركة.png';
+
+    var showBadge=(pst==='coming_soon'||pst==='almost_full');
+    var badgeText=(pst==='coming_soon'?'قريباً':(pst==='almost_full'?'اقترب موعد الانطلاق':''));
+
+    var bookingDisabled=(pst==='full'||pst==='ended'||pst==='coming_soon');
+    var bookingText=(pst==='full'?'اكتملت المقاعد':(pst==='ended'?'انتهى':(pst==='coming_soon'?'قريباً':'الحجز')));
+    var bookingClass=pst==='full'?'full':(pst==='ended'?'ended':(pst==='coming_soon'?'coming':'available'));
 
     var card=document.createElement('div');
     card.className='prg-card';
     card.setAttribute('data-anim','fade-up');
-    card.style.cursor='pointer';
     card.innerHTML='<div class="prg-img-wrap">'
       +'<img src="'+esc(imgUrl)+'" alt="'+esc(d.name||'')+'" loading="lazy">'
-      +'<span class="prg-badge '+esc(pstClasses[pst]||'prg-badge-avail')+'">'+esc(badgeLabel)+'</span>'
+      +(showBadge?'<span class="prg-badge '+esc(pstClasses[pst])+'">'+esc(badgeText)+'</span>':'')
       +'</div>'
       +'<div class="prg-body">'
       +'<h3 class="prg-name">'+esc(d.name||'')+'</h3>'
@@ -371,15 +411,27 @@ function renderCards(list,isFirestore){
       +'<span class="prg-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'+(d.departureDate||d.departure||'')+'</span>'
       +'</div>'
       +'<p class="prg-desc">'+esc(d.shortDesc||'')+'</p>'
-      +'<div class="prg-footer">'
-      +'<span class="prg-price" style="font-size:14px;color:var(--g500);font-weight:500">'+esc(d.price||'للاستفسار عن السعر')+'</span>'
+      +'<div class="prg-actions">'
+      +'<button class="prg-action-btn prg-details-btn">عرض التفاصيل</button>'
+      +'<button class="prg-action-btn prg-booking-btn '+bookingClass+'"'+(bookingDisabled?' disabled':'')+'>'+bookingText+'</button>'
       +'</div>'
       +'</div>';
-    if(isFirestore){
-      card.addEventListener('click',function(id){return function(){openProgramModal(id)}}(item.id));
-    }else{
-      card.addEventListener('click',function(idx){return function(){openProgramModalFB(idx)}}(i));
+
+    var detailsBtn=card.querySelector('.prg-details-btn');
+    var bookingBtn=card.querySelector('.prg-booking-btn');
+
+    detailsBtn.addEventListener('click',function(e){
+      e.stopPropagation();
+      if(isFirestore)openProgramModal(item.id);
+      else openProgramModalFB(i);
+    });
+    if(!bookingDisabled){
+      bookingBtn.addEventListener('click',function(e){
+        e.stopPropagation();
+        openBookingWA(d.name||'');
+      });
     }
+
     grid.appendChild(card);
   });
   if(typeof window.reinitAnimations==='function')window.reinitAnimations();
