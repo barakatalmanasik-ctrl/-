@@ -59,7 +59,7 @@
         <a href="#testimonials" class="nav-link">آراء العملاء</a>
         <a href="#contact" class="nav-link">تواصل معنا</a>
       </div>
-      <a href="#programs" class="sidebar-btn">احجز الآن</a>
+      <button class="sidebar-btn" id="openBookingBtnSide">احجز الآن</button>
       <a href="https://wa.me/9647712441233" class="nav-cta" target="_blank" rel="noopener" aria-label="واتساب">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
         واتساب
@@ -86,8 +86,8 @@
     <p class="hero-tagline">خبرة تزيد عن <strong>22 عاماً</strong> في تقديم أرقى خدمات السفر والسياحة</p>
     <div class="hero-btns">
       <a href="#contact" class="btn btn-lg btn-primary">تواصل معنا</a>
-      <a href="#programs" class="btn btn-lg btn-accent">الحجز</a>
-      <a href="#programs" class="btn btn-lg btn-outline">البرامج</a>
+      <a href="#programs" class="btn btn-lg btn-accent">البرامج</a>
+      <button class="btn btn-lg btn-outline" id="openBookingBtn">حجز تذكرة</button>
     </div>
   </div>
 </section>
@@ -582,6 +582,54 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Booking Form Modal -->
+<div class="bm-overlay" id="bookingModal">
+  <div class="bm-modal">
+    <button class="bm-close" id="bmClose" aria-label="إغلاق">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h3 class="bm-title">حجز تذكرة سفر</h3>
+    <form id="bookingForm" class="bm-form">
+      <div class="bm-field">
+        <label for="bmDeparture">وجهة الانطلاق</label>
+        <input type="text" id="bmDeparture" placeholder="مثال: النجف الأشرف" required>
+      </div>
+      <div class="bm-field">
+        <label for="bmDestination">الوجهة المطلوبة</label>
+        <input type="text" id="bmDestination" placeholder="مثال: مشهد المقدسة" required>
+      </div>
+      <div class="bm-row">
+        <div class="bm-field">
+          <label for="bmDate">تاريخ السفر</label>
+          <input type="date" id="bmDate" required>
+        </div>
+        <div class="bm-field">
+          <label for="bmPassengers">عدد المسافرين</label>
+          <input type="number" id="bmPassengers" min="1" max="20" value="1" required>
+        </div>
+      </div>
+      <div class="bm-field">
+        <label for="bmTripType">نوع الرحلة</label>
+        <select id="bmTripType" required>
+          <option value="ذهاب وعودة">ذهاب وعودة</option>
+          <option value="ذهاب فقط">ذهاب فقط</option>
+        </select>
+      </div>
+      <div class="bm-row">
+        <div class="bm-field">
+          <label for="bmName">الاسم الكامل</label>
+          <input type="text" id="bmName" placeholder="الاسم الثلاثي" required>
+        </div>
+        <div class="bm-field">
+          <label for="bmPhone">رقم الهاتف</label>
+          <input type="tel" id="bmPhone" placeholder="07XXXXXXXXX" required>
+        </div>
+      </div>
+      <button type="submit" class="bm-submit">إرسال الطلب عبر واتساب</button>
+    </form>
   </div>
 </div>
 

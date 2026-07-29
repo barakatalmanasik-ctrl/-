@@ -207,6 +207,24 @@ function showTopBtn(){if(topBtn)topBtn.style.display=window.scrollY>500?'flex':'
 window.addEventListener('scroll',showTopBtn,{passive:true});
 if(topBtn)topBtn.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
 
+/* === Booking Form Modal === */
+var bmOverlay=document.getElementById('bookingModal');
+var bmClose=document.getElementById('bmClose');
+var bmForm=document.getElementById('bookingForm');
+function openBookingModal(){if(bmOverlay)bmOverlay.classList.add('show');document.body.classList.add('no-scroll')}
+function closeBookingModal(){if(bmOverlay)bmOverlay.classList.remove('show');document.body.classList.remove('no-scroll')}
+document.getElementById('openBookingBtn')&&document.getElementById('openBookingBtn').addEventListener('click',openBookingModal);
+document.getElementById('openBookingBtnSide')&&document.getElementById('openBookingBtnSide').addEventListener('click',openBookingModal);
+if(bmClose)bmClose.addEventListener('click',closeBookingModal);
+if(bmOverlay)bmOverlay.addEventListener('click',function(e){if(e.target===bmOverlay)closeBookingModal()});
+if(bmForm)bmForm.addEventListener('submit',function(e){
+  e.preventDefault();
+  var d={departure:document.getElementById('bmDeparture').value.trim(),destination:document.getElementById('bmDestination').value.trim(),date:document.getElementById('bmDate').value,passengers:document.getElementById('bmPassengers').value,tripType:document.getElementById('bmTripType').value,fullName:document.getElementById('bmName').value.trim(),phone:document.getElementById('bmPhone').value.trim()};
+  var msg=BOOKING_TEMPLATE.replace('{departure}',d.departure).replace('{destination}',d.destination).replace('{date}',d.date).replace('{passengers}',d.passengers).replace('{tripType}',d.tripType).replace('{fullName}',d.fullName).replace('{phone}',d.phone);
+  window.open('https://wa.me/'+COMPANY_WHATSAPP+'?text='+encodeURIComponent(msg),'_blank');
+  closeBookingModal();
+});
+
 /* === Social Contact Pill Toggle === */
 var scPill=document.getElementById('scPill');
 var scToggle=document.getElementById('scPillToggle');

@@ -344,6 +344,25 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
   .pm-meta-grid{grid-template-columns:1fr}
 }
 
+/* ── Booking Form Modal ── */
+.bm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.bm-overlay.show{opacity:1;visibility:visible}
+.bm-modal{background:var(--white);border-radius:var(--r-lg);width:100%;max-width:500px;max-height:90vh;overflow-y:auto;padding:32px 28px 28px;box-shadow:0 25px 60px rgba(0,0,0,.3);transform:translateY(30px) scale(.97);transition:transform .35s cubic-bezier(.34,1.56,.64,1);position:relative;direction:rtl}
+.bm-overlay.show .bm-modal{transform:translateY(0) scale(1)}
+.bm-close{position:absolute;top:14px;left:14px;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--g400);transition:all .2s;border:none;background:var(--off);cursor:pointer}
+.bm-close:hover{background:var(--g200);color:var(--navy);transform:rotate(90deg)}
+.bm-title{font-family:var(--h);font-size:22px;font-weight:800;color:var(--navy);margin:0 0 24px;text-align:center}
+.bm-form{display:flex;flex-direction:column;gap:16px}
+.bm-field{display:flex;flex-direction:column;gap:6px}
+.bm-field label{font-size:13px;font-weight:600;color:var(--g600)}
+.bm-field input,.bm-field select{padding:12px 14px;border:1.5px solid var(--g200);border-radius:var(--r-md);font-family:var(--b);font-size:14px;color:var(--navy);transition:border-color .2s;outline:none;background:var(--white)}
+.bm-field input:focus,.bm-field select:focus{border-color:var(--gold)}
+.bm-field input::placeholder{color:var(--g400)}
+.bm-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bm-submit{width:100%;padding:14px;border:none;border-radius:var(--r-md);background:var(--emerald);color:var(--white);font-family:var(--b);font-size:15px;font-weight:700;cursor:pointer;transition:background .25s,transform .2s;margin-top:4px}
+.bm-submit:hover{background:var(--emerald-d);transform:translateY(-1px)}
+@media(max-width:480px){.bm-modal{padding:24px 18px}.bm-title{font-size:18px;margin-bottom:18px}.bm-row{grid-template-columns:1fr}}
+
 /* ── Read More Modal ── */
 .rm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:all .3s var(--ease)}
 .rm-overlay.show{opacity:1;visibility:visible}
@@ -510,7 +529,7 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
   .sidebar-links .nav-link:last-child{border-bottom:none}
   .sidebar-links .nav-link:hover,.sidebar-links .nav-link.active{color:var(--gold-l);background:transparent}
   .sidebar-links .nav-link::after{display:none}
-  .sidebar-btn{display:block;margin:8px 16px 20px;padding:12px;text-align:center;background:var(--gold);color:var(--navy);border-radius:8px;font-size:14px;font-weight:700;transition:opacity .2s;text-decoration:none}
+  .sidebar-btn{display:block;margin:8px 16px 20px;padding:12px;text-align:center;background:var(--gold);color:var(--navy);border-radius:8px;font-size:14px;font-weight:700;transition:opacity .2s;text-decoration:none;border:none;cursor:pointer;width:auto}
   .sidebar-btn:hover{opacity:.9}
   .nav-cta{display:none}
 }
