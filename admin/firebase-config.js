@@ -1,7 +1,10 @@
 /* ═══════════════════════════════════════
    Global Company Config
    ═══════════════════════════════════════ */
-const COMPANY_WHATSAPP = '9647712441233';
+const COMPANY_WHATSAPP    = '9647712441233';
+const COMPANY_PHONE       = '+9647801733892';
+const COMPANY_FACEBOOK    = 'https://www.facebook.com/share/14jpSSZySaz/';
+const COMPANY_INSTAGRAM   = 'https://www.instagram.com/barakat_almanasik';
 
 /* ═══════════════════════════════════════
    Firebase Configuration

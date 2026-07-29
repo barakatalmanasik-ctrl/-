@@ -207,6 +207,14 @@ function showTopBtn(){if(topBtn)topBtn.style.display=window.scrollY>500?'flex':'
 window.addEventListener('scroll',showTopBtn,{passive:true});
 if(topBtn)topBtn.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
 
+/* === Floating Social Toggle === */
+var fsocial=document.getElementById('fsocial');
+var fsocialToggle=document.getElementById('fsocialToggle');
+if(fsocialToggle){
+  fsocialToggle.addEventListener('click',function(e){e.stopPropagation();fsocial.classList.toggle('on')});
+  document.addEventListener('click',function(e){if(!fsocial.contains(e.target))fsocial.classList.remove('on')});
+}
+
 /* === Button Ripple Coordinates === */
 document.querySelectorAll('.btn').forEach(function(b){
   b.addEventListener('mousemove',function(e){

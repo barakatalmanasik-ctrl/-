@@ -502,12 +502,13 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 
 /* Mobile Menu < 1024px */
 @media(max-width:1023px){
+  .nav-toggle{display:flex}
   .nav-menu{position:fixed;top:0;right:-320px;width:320px;height:100vh;background:var(--navy);flex-direction:column;align-items:stretch;padding:0;transition:right .35s cubic-bezier(.4,0,.2,1);box-shadow:-8px 0 40px rgba(0,0,0,.3);z-index:998;overflow-y:auto}
   .nav-menu.on{right:0}
   .sidebar-header{padding:32px 24px 20px;text-align:center;border-bottom:1px solid rgba(255,255,255,.08)}
   .sidebar-logo{width:64px;height:64px;object-fit:contain;margin-bottom:12px}
   .sidebar-brand-text .sidebar-title{font-family:var(--h);font-size:16px;font-weight:700;color:var(--white);line-height:1.5}
-  .sidebar-brand-text .sidebar-tagline{font-size:12px;color:var(--gold);margin-top:4px;font-weight:500}
+  .sidebar-brand-text .sidebar-tagline{font-size:12px;color:var(--gold);margin-top:6px;font-weight:500;line-height:1.5}
   .sidebar-links{list-style:none;margin:0;padding:8px 0;display:flex;flex-direction:column}
   .sidebar-links li{margin:0}
   .nav-link{padding:14px 24px;font-size:15px;color:rgba(255,255,255,.7);border-radius:0;display:block;width:100%}
@@ -520,7 +521,24 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
   .sidebar-btn-wa{background:var(--emerald);color:var(--white)}
   .sidebar-btn-wa:hover{background:var(--emerald-d);transform:translateY(-1px);color:var(--white)}
   .nav-cta{display:none}
+  /* Floating social for mobile */
+  .fsocial{display:flex}
 }
+
+/* ── Floating Social Buttons (mobile) ── */
+.fsocial{position:fixed;bottom:120px;left:16px;z-index:990;display:none;flex-direction:column;align-items:center}
+.fsocial-toggle{width:52px;height:52px;border:none;border-radius:50%;background:var(--navy);color:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.25);transition:all .3s var(--ease);position:relative;z-index:2}
+.fsocial-toggle:hover{transform:scale(1.08)}
+.fsocial-toggle.on svg{transform:rotate(45deg)}
+.fsocial-items{position:absolute;bottom:60px;left:6px;display:flex;flex-direction:column;gap:10px;opacity:0;visibility:hidden;transform:translateY(12px) scale(.9);transition:all .3s cubic-bezier(.4,0,.2,1)}
+.fsocial.on .fsocial-items{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+.fsocial-item{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,.18);transition:all .3s var(--ease);text-decoration:none;color:var(--white)}
+.fsocial-item:hover{transform:scale(1.14)}
+.fsocial-wa{background:#25D366}
+.fsocial-fb{background:#1877F2}
+.fsocial-ig{background:#E4405F}
+.fsocial-phone{background:var(--emerald)}
+@media(min-width:1024px){.fsocial{display:none!important}}
 
 /* 768px+ Tablet */
 @media(min-width:768px){
