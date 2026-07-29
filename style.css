@@ -311,16 +311,33 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 .rm-label{font-size:12px;color:var(--g400)}
 
 /* ═══════════════════════════════════════
-   GALLERY SECTION
+   GALLERY SECTION — Albums
    ═══════════════════════════════════════ */
-.gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.gallery-card{border-radius:var(--r-lg);overflow:hidden;position:relative;aspect-ratio:1;background:var(--off);transition:all .4s var(--ease);cursor:pointer}
-.gallery-card:hover{transform:translateY(-4px);box-shadow:var(--sh-lg)}
-.gallery-card img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
-.gallery-card:hover img{transform:scale(1.05)}
-.gallery-caption{position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:var(--white)}
-.gallery-caption h4{font-family:var(--h);font-size:14px;font-weight:700;margin-bottom:2px}
-.gallery-caption p{font-size:12px;color:rgba(255,255,255,.7)}
+
+/* Album Cards Grid */
+.albums-grid{display:grid;grid-template-columns:1fr;gap:20px}
+.album-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all .4s var(--ease);cursor:pointer}
+.album-card:hover{box-shadow:var(--sh-lg);transform:translateY(-4px)}
+.album-img-wrap{position:relative;overflow:hidden;aspect-ratio:16/10;background:var(--off)}
+.album-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
+.album-card:hover .album-img-wrap img{transform:scale(1.05)}
+.album-count{position:absolute;bottom:12px;left:12px;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);border-radius:var(--r-full);color:var(--white);font-size:12px;font-weight:600}
+.album-count svg{flex-shrink:0;color:var(--gold)}
+.album-body{padding:20px 22px}
+.album-name{font-family:var(--h);font-size:17px;font-weight:700;color:var(--g900);margin-bottom:4px}
+.album-desc{font-size:13px;color:var(--g500);line-height:1.7}
+
+/* Album Detail Grid (images inside album) */
+.album-detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.album-detail-header{grid-column:1/-1;display:flex;align-items:center;gap:16px;padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.album-back-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-full);border:1px solid var(--border);background:var(--white);color:var(--g600);font-size:13px;font-weight:500;cursor:pointer;transition:all .25s var(--ease)}
+.album-back-btn:hover{background:var(--off);color:var(--navy);border-color:var(--navy)}
+.album-back-btn svg{flex-shrink:0}
+.album-detail-title{font-family:var(--h);font-size:18px;font-weight:700;color:var(--g900);margin:0}
+.album-img-card{border-radius:var(--r-md);overflow:hidden;aspect-ratio:1;background:var(--off);cursor:pointer;transition:all .35s var(--ease);position:relative}
+.album-img-card:hover{transform:translateY(-3px);box-shadow:var(--sh-md)}
+.album-img-card img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
+.album-img-card:hover img{transform:scale(1.04)}
 
 /* ═══════════════════════════════════════
    PROGRAMS SECTION
@@ -437,7 +454,8 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
   .svc-grid{grid-template-columns:repeat(2,1fr);gap:24px}
   .why-grid{grid-template-columns:repeat(2,1fr);gap:16px}
   .cf-grid{grid-template-columns:1fr 1fr}
-  .gallery-grid{grid-template-columns:repeat(3,1fr);gap:16px}
+  .albums-grid{grid-template-columns:repeat(2,1fr);gap:20px}
+  .album-detail-grid{grid-template-columns:repeat(3,1fr);gap:14px}
   .prg-grid{grid-template-columns:repeat(2,1fr);gap:24px}
   .contact-grid{grid-template-columns:1fr 1fr;gap:40px}
   .footer-grid{grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:40px}
@@ -453,7 +471,8 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
   .svc-grid{grid-template-columns:repeat(3,1fr)}
   .why-grid{grid-template-columns:repeat(4,1fr)}
   .why-card{padding:36px 24px;flex-direction:column;align-items:center;text-align:center}
-  .gallery-grid{grid-template-columns:repeat(4,1fr)}
+  .albums-grid{grid-template-columns:repeat(3,1fr);gap:24px}
+  .album-detail-grid{grid-template-columns:repeat(4,1fr);gap:16px}
   .prg-grid{grid-template-columns:repeat(3,1fr)}
 }
 
@@ -475,7 +494,8 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
   .testi-txt{font-size:14px}
   .comment-form-wrap{padding:0 8px}
   .cf-form{padding:20px 16px}
-  .gallery-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .albums-grid{grid-template-columns:1fr}
+  .album-detail-grid{grid-template-columns:repeat(2,1fr);gap:6px}
   .prg-body{padding:16px}
   .prg-name{font-size:16px}
   .prg-meta{gap:8px}

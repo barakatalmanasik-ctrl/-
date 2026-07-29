@@ -1,17 +1,45 @@
 /* ═══════════════════════════════════════════════
-   Gallery Module - Load Active Gallery from Firestore + Lightbox
+   Gallery Module - Albums + Lightbox
    ═══════════════════════════════════════════════ */
 (function(){
 'use strict';
 
-try{firebase.initializeApp(firebaseConfig)}catch(e){}
-var db=firebase.firestore();
-
 function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+/* ═══════════════════════════════════════════════════
+   ALBUMS DATA — extend this array to add more albums
+   ═══════════════════════════════════════════════════ */
+var ALBUMS=[
+  {
+    id:'umrah-iran',
+    name:'رحلات العمرة وإيران',
+    desc:'صور من رحلات العمرة وإيران',
+    cover:'images/albums/umrah-iran/img-01.jpeg',
+    count:30,
+    images:[]
+  }
+];
+
+/* build images list for album */
+(function(){
+  for(var a=0;a<ALBUMS.length;a++){
+    var alb=ALBUMS[a];
+    if(alb.images&&alb.images.length===0&&alb.count){
+      alb.images=[];
+      for(var i=1;i<=alb.count;i++){
+        var n=i<10?'0'+i:''+i;
+        alb.images.push({
+          url:'images/albums/'+alb.id+'/img-'+n+'.jpeg',
+          title:alb.name
+        });
+      }
+    }
+  }
+})();
 
 /* ── Lightbox ── */
 var lb={};
-var images=[];
+var lbImages=[];
 
 function buildLightbox(){
   var o=document.createElement('div');
@@ -51,31 +79,23 @@ function buildLightbox(){
   lb.touchDiffX=0;
   lb.touchDiffY=0;
 
-  /* close */
-  lb.closeBtn.addEventListener('click',close);
-  lb.backdrop.addEventListener('click',close);
-  lb.overlay.addEventListener('keydown',function(e){
-    if(e.key==='Escape')close();
-  });
+  lb.closeBtn.addEventListener('click',lbClose);
+  lb.backdrop.addEventListener('click',lbClose);
 
-  /* nav */
-  lb.prevBtn.addEventListener('click',function(){navigate(-1)});
-  lb.nextBtn.addEventListener('click',function(){navigate(1)});
+  lb.prevBtn.addEventListener('click',function(){lbNavigate(-1)});
+  lb.nextBtn.addEventListener('click',function(){lbNavigate(1)});
 
-  /* zoom */
-  lb.zoomInBtn.addEventListener('click',zoomIn);
-  lb.zoomOutBtn.addEventListener('click',zoomOut);
+  lb.zoomInBtn.addEventListener('click',lbZoomIn);
+  lb.zoomOutBtn.addEventListener('click',lbZoomOut);
   lb.imgWrap.addEventListener('wheel',function(e){
     e.preventDefault();
-    if(e.deltaY<0)zoomIn();else zoomOut();
+    if(e.deltaY<0)lbZoomIn();else lbZoomOut();
   },{passive:false});
 
-  /* protect */
   lb.overlay.addEventListener('contextmenu',function(e){e.preventDefault()});
   lb.overlay.addEventListener('dragstart',function(e){e.preventDefault()});
   lb.overlay.addEventListener('selectstart',function(e){e.preventDefault()});
 
-  /* touch swipe + pinch */
   var pinchDist=0;
   lb.overlay.addEventListener('touchstart',function(e){
     if(e.touches.length===1){
@@ -83,25 +103,19 @@ function buildLightbox(){
       lb.touchStartY=e.touches[0].clientY;
       lb.touchDiffX=0;
     }else if(e.touches.length===2){
-      pinchDist=Math.hypot(
-        e.touches[0].clientX-e.touches[1].clientX,
-        e.touches[0].clientY-e.touches[1].clientY
-      );
+      pinchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
     }
   },{passive:true});
 
   lb.overlay.addEventListener('touchmove',function(e){
-    if(e.touches.length===1 && lb.overlay.classList.contains('lb-open')){
+    if(e.touches.length===1&&lb.overlay.classList.contains('lb-open')){
       lb.touchDiffX=e.touches[0].clientX-lb.touchStartX;
       lb.touchDiffY=e.touches[0].clientY-lb.touchStartY;
     }else if(e.touches.length===2){
-      var d=Math.hypot(
-        e.touches[0].clientX-e.touches[1].clientX,
-        e.touches[0].clientY-e.touches[1].clientY
-      );
+      var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
       if(pinchDist>0){
-        if(d>pinchDist*1.1)zoomIn();
-        else if(d<pinchDist*0.9)zoomOut();
+        if(d>pinchDist*1.1)lbZoomIn();
+        else if(d<pinchDist*0.9)lbZoomOut();
       }
       pinchDist=d;
     }
@@ -111,8 +125,8 @@ function buildLightbox(){
     if(e.changedTouches.length===1){
       var dx=lb.touchDiffX;
       var dy=lb.touchDiffY;
-      if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*2){
-        navigate(dx>0?-1:1);
+      if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*2){
+        lbNavigate(dx>0?-1:1);
       }
     }
     lb.touchDiffX=0;
@@ -120,15 +134,13 @@ function buildLightbox(){
     pinchDist=0;
   },{passive:true});
 
-  /* keyboard */
   document.addEventListener('keydown',function(e){
     if(!lb.overlay.classList.contains('lb-open'))return;
-    if(e.key==='Escape'){e.preventDefault();close()}
-    else if(e.key==='ArrowLeft'){e.preventDefault();navigate(-1)}
-    else if(e.key==='ArrowRight'){e.preventDefault();navigate(1)}
+    if(e.key==='Escape'){e.preventDefault();lbClose()}
+    else if(e.key==='ArrowLeft'){e.preventDefault();lbNavigate(-1)}
+    else if(e.key==='ArrowRight'){e.preventDefault();lbNavigate(1)}
   });
 
-  /* prevent body scroll when open */
   var observer=new MutationObserver(function(){
     if(lb.overlay.classList.contains('lb-open')){
       lb.scrollTop=document.documentElement.scrollTop||document.body.scrollTop;
@@ -137,25 +149,24 @@ function buildLightbox(){
   observer.observe(lb.overlay,{attributes:true,attributeFilter:['class']});
 }
 
-function open(idx){
-  if(!images.length)return;
-  if(idx<0)idx=images.length-1;
-  else if(idx>=images.length)idx=0;
+function lbOpen(idx){
+  if(!lbImages.length)return;
+  if(idx<0)idx=lbImages.length-1;
+  else if(idx>=lbImages.length)idx=0;
   lb.idx=idx;
   lb.zoom=1;
-  lb.img.src=images[idx].url;
-  lb.img.alt=images[idx].title||'';
-  lb.counter.textContent=(idx+1)+' / '+images.length;
+  lb.img.src=lbImages[idx].url;
+  lb.img.alt=lbImages[idx].title||'';
+  lb.counter.textContent=(idx+1)+' / '+lbImages.length;
   lb.imgWrap.style.transform='scale(1)';
   lb.overlay.classList.add('lb-open');
   document.body.style.overflow='hidden';
   document.documentElement.style.overflow='hidden';
-  /* force layout then add anim class */
   void lb.overlay.offsetWidth;
   lb.overlay.classList.add('lb-anim');
 }
 
-function close(){
+function lbClose(){
   lb.overlay.classList.remove('lb-anim');
   lb.overlay.classList.remove('lb-open');
   document.body.style.overflow='';
@@ -163,72 +174,92 @@ function close(){
   lb.img.src='';
 }
 
-function navigate(dir){
-  open(lb.idx+dir);
+function lbNavigate(dir){
+  lbOpen(lb.idx+dir);
 }
 
-function zoomIn(){
-  if(lb.zoom<5){lb.zoom=Math.min(lb.zoom+0.5,5);applyZoom()}
+function lbZoomIn(){
+  if(lb.zoom<5){lb.zoom=Math.min(lb.zoom+0.5,5);lbApplyZoom()}
 }
 
-function zoomOut(){
-  if(lb.zoom>0.5){lb.zoom=Math.max(lb.zoom-0.5,0.5);applyZoom()}
+function lbZoomOut(){
+  if(lb.zoom>0.5){lb.zoom=Math.max(lb.zoom-0.5,0.5);lbApplyZoom()}
 }
 
-function applyZoom(){
+function lbApplyZoom(){
   lb.imgWrap.style.transform='scale('+lb.zoom+')';
 }
 
-function resetZoom(){
-  lb.zoom=1;
-  lb.imgWrap.style.transform='scale(1)';
-}
+/* ── Gallery: Albums → Detail → Lightbox ── */
 
-/* ── Load Gallery ── */
-function loadGallery(){
+function showAlbums(){
   var grid=document.getElementById('galleryGrid');
   if(!grid)return;
+  grid.innerHTML='';
+  grid.className='albums-grid';
 
-  db.collection('gallery')
-    .where('status','==','active')
-    .orderBy('order','asc')
-    .limit(20)
-    .get()
-    .then(function(snap){
-      if(!snap.docs.length){
-        grid.parentElement.style.display='none';
-        return;
-      }
-      grid.innerHTML='';
-      images=[];
-      snap.docs.forEach(function(doc){
-        var d=doc.data();
-        images.push({url:d.imageUrl,title:d.title||'',desc:d.description||''});
-        var card=document.createElement('div');
-        card.className='gallery-card';
-        card.setAttribute('data-anim','fade-up');
-        var imgHtml='<img src="'+esc(d.imageUrl)+'" alt="'+esc(d.title||'صور الموقع')+'" loading="lazy">';
-        var captionHtml='';
-        if(d.title){
-          captionHtml='<div class="gallery-caption"><h4>'+esc(d.title)+'</h4>';
-          if(d.description)captionHtml+='<p>'+esc(d.description)+'</p>';
-          captionHtml+='</div>';
-        }
-        card.innerHTML=imgHtml+captionHtml;
-        /* open lightbox on click */
-        card.addEventListener('click',function(idx){
-          return function(){open(idx)};
-        }(images.length-1));
-        grid.appendChild(card);
-      });
-      /* build lightbox once */
-      if(!lb.overlay)buildLightbox();
-      if(typeof window.reinitAnimations==='function')window.reinitAnimations();
-    })
-    .catch(function(){});
+  for(var a=0;a<ALBUMS.length;a++){
+    var d=ALBUMS[a];
+    var card=document.createElement('div');
+    card.className='album-card';
+    card.setAttribute('data-anim','fade-up');
+    card.innerHTML='<div class="album-img-wrap">'
+      +'<img src="'+esc(d.cover)+'" alt="'+esc(d.name)+'" loading="lazy">'
+      +'<div class="album-count"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'+d.count+' صورة</div>'
+      +'</div>'
+      +'<div class="album-body">'
+      +'<h3 class="album-name">'+esc(d.name)+'</h3>'
+      +(d.desc?'<p class="album-desc">'+esc(d.desc)+'</p>':'')
+      +'</div>';
+    card.addEventListener('click',function(aIdx){return function(){showAlbum(aIdx)}}(a));
+    grid.appendChild(card);
+  }
+  if(typeof window.reinitAnimations==='function')window.reinitAnimations();
+}
+
+function showAlbum(idx){
+  var alb=ALBUMS[idx];
+  if(!alb||!alb.images)return;
+  var grid=document.getElementById('galleryGrid');
+  if(!grid)return;
+  grid.className='album-detail-grid';
+  lbImages=alb.images;
+
+  var html='<div class="album-detail-header">'
+    +'<button class="album-back-btn" onclick="window.albumBack()" aria-label="العودة للألبومات">'
+    +'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>'
+    +'العودة للألبومات'
+    +'</button>'
+    +'<h3 class="album-detail-title">'+esc(alb.name)+'</h3>'
+    +'</div>';
+
+  for(var i=0;i<alb.images.length;i++){
+    var im=alb.images[i];
+    html+='<div class="album-img-card">'
+      +'<img src="'+esc(im.url)+'" alt="'+esc(alb.name)+'" loading="lazy">'
+      +'</div>';
+  }
+  grid.innerHTML=html;
+
+  var cards=grid.querySelectorAll('.album-img-card');
+  for(var j=0;j<cards.length;j++){
+    cards[j].addEventListener('click',(function(jIdx){return function(){lbOpen(jIdx)}})(j));
+  }
+
+  if(!lb.overlay)buildLightbox();
+}
+
+window.albumBack=function(){
+  showAlbums();
+};
+
+function loadGallery(){
+  if(!document.getElementById('galleryGrid'))return;
+  showAlbums();
 }
 
 loadGallery();
 window.loadGallery=loadGallery;
+window.showAlbums=showAlbums;
 
 })();
