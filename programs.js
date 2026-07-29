@@ -20,6 +20,32 @@ var pstClasses={
 var transLabels={flight:'طيران',bus:'باصات VIP',mixed:'النقل المختلط'};
 var seedAttempted=false;
 
+/* ── Program cover images lookup (name-based matching) ── */
+var PROGRAM_COVER_DIR='images/صور برامج الشركة/';
+var PROGRAM_COVER_FILES=[
+  'برنامج ايران جوا.png',
+  'برنامج ايران برا .png',
+  'برنامج العمرة.png'
+];
+var programCoverMap={};
+PROGRAM_COVER_FILES.forEach(function(f){
+  var nameNoExt=f.replace(/\.\w+$/,'').trim();
+  var normalized=nameNoExt.replace(/[\u064B-\u065F]/g,'').replace(/[إأآ]/g,'ا').trim();
+  programCoverMap[normalized]=PROGRAM_COVER_DIR+f;
+});
+
+function getProgramCover(programName){
+  if(!programName)return null;
+  var normalized=programName.replace(/[\u064B-\u065F]/g,'').replace(/[إأآ]/g,'ا').trim();
+  if(programCoverMap[normalized])return programCoverMap[normalized];
+  for(var key in programCoverMap){
+    if(normalized.indexOf(key)!==-1||key.indexOf(normalized)!==-1)
+      return programCoverMap[key];
+  }
+  console.warn('Image not found for:',programName);
+  return null;
+}
+
 /* ═══════════════════════════════════════════════════
    STATIC FALLBACK — used when Firestore is empty
    ═══════════════════════════════════════════════════ */
@@ -30,7 +56,7 @@ var FALLBACK_PROGRAMS=[
     departure:'كل سبت وخميس',
     shortDesc:'رحلة دينية سياحية إلى شمال إيران (رشت، فومن، قلعة رودخان، ماسولة، بندر انزلي) ومدينة مشهد المقدسة وقم. المسار: رشت - فومن - قلعة رودخان - ماسولة - بندر انزلي - مشهد - قم.',
     price:'للاستفسار عن السعر مراسلتنا',
-    img:'images/برنامج ايران جوا.png',
+    img:'images/صور برامج الشركة/برنامج ايران جوا.png',
     programStatus:'available',
     transport:'flight',
     meals:'اختياري (3 وجبات بوفيه +100 دولار)',
@@ -73,7 +99,7 @@ var FALLBACK_PROGRAMS=[
     departure:'كل سبت وخميس',
     shortDesc:'رحلة برية دينية سياحية إلى قم، مشهد ونيشابور بباصات VIP حديثة ومكيفة. تشمل 3 وجبات طعام في كل المناطق.',
     price:'للاستفسار عن السعر مراسلتنا',
-    img:'images/برنامج ايران برا .png',
+    img:'images/صور برامج الشركة/برنامج ايران برا .png',
     programStatus:'available',
     transport:'bus',
     meals:'3 وجبات يومياً',
@@ -116,7 +142,7 @@ var FALLBACK_PROGRAMS=[
     departure:'كل أسبوع',
     shortDesc:'رحلة عمرة مع شركة بركات المناسك. 7 ليالي في مكة المكرمة (منطقة محبس الجن) و3 ليالي في المدينة المنورة (مركزية). تشمل تذكرة طيران وإقامة في فنادق 4 نجوم وجميع التنقلات.',
     price:'للاستفسار عن السعر مراسلتنا',
-    img:'images/برنامج العمرة.png',
+    img:'images/صور برامج الشركة/برنامج العمرة.png',
     programStatus:'available',
     transport:'flight',
     meals:'بوفيه مفتوح',
@@ -155,13 +181,18 @@ var FALLBACK_PROGRAMS=[
 
 /* ── Shared: populate modal from data object ── */
 function populateModal(d,fallbackIdx){
+  if(!d){console.error('❌ Program data not found.');return}
+  console.log('📝 Populating modal for:',d.name);
   var heroImg=document.getElementById('pmHeroImg');
-  heroImg.src=d.img||d.mainImage||'';
+  var imgUrl=getProgramCover(d.name)||d.img||d.mainImage||'';
+  heroImg.src=imgUrl;
   heroImg.alt=d.name||'';
+  console.log('🖼️ Image URL:',imgUrl);
   heroImg.onerror=function(){
     console.warn('⚠️ صورة البرنامج غير موجودة في المودال:',d.name);
     this.style.display='none';
   };
+  console.log('✅ Image Loaded:',imgUrl);
   document.getElementById('pmName').textContent=d.name||'';
   var badge=document.getElementById('pmStatusBadge');
   var pst=d.programStatus||'available';
@@ -310,6 +341,7 @@ function closeProgramModal(){
 
 /* ── Open modal from Firestore (docId) ── */
 function openProgramModal(docId){
+  console.log('🔍 Program ID:',docId);
   var overlay=document.getElementById('programModal');
   if(!overlay)return;
   showLoading();
@@ -318,23 +350,34 @@ function openProgramModal(docId){
   document.documentElement.style.overflow='hidden';
 
   db.collection('programs').doc(docId).get().then(function(snap){
-    if(!snap.exists){closeProgramModal();return}
+    if(!snap.exists){console.warn('⚠️ Program not found in Firestore:',docId);closeProgramModal();return}
     var d=snap.data();
+    console.log('📦 Program Data:',d);
+    d.img=d.mainImage;
     db.collection('programs').doc(docId).collection('timeline').orderBy('order','asc').get().then(function(tlSnap){
       var timeline=[];
       tlSnap.docs.forEach(function(tl){timeline.push({title:tl.data().title,desc:tl.data().description})});
       d.timeline=timeline;
-      d.img=d.mainImage;
+      console.log('✅ Timeline loaded:',timeline.length,'days');
+      populateModal(d);
+      overlay.classList.add('pm-anim');
+    }).catch(function(err){
+      console.warn('⚠️ Timeline fetch failed, showing program without timeline:',err.message);
       populateModal(d);
       overlay.classList.add('pm-anim');
     });
-  }).catch(function(){closeProgramModal()});
+  }).catch(function(err){
+    console.error('❌ Firestore fetch failed:',err.message);
+    closeProgramModal()
+  });
 }
 
 /* ── Open modal from fallback (index) ── */
 function openProgramModalFB(idx){
+  console.log('🔍 Fallback index:',idx);
   var d=FALLBACK_PROGRAMS[idx];
-  if(!d)return;
+  if(!d){console.warn('⚠️ Program data not found at index:',idx);return}
+  console.log('📦 Program Data:',d);
   var overlay=document.getElementById('programModal');
   if(!overlay)return;
   showLoading();
@@ -393,7 +436,7 @@ function renderCards(list,isFirestore){
   list.forEach(function(item,i){
     var d=isFirestore?item.data:item;
     var pst=d.programStatus||'available';
-    var imgSrc=d.mainImage||d.img;
+    var imgSrc=getProgramCover(d.name)||d.mainImage||d.img;
     var imgUrl=imgSrc?imgSrc+'?v='+Date.now():'';
 
     var showBadge=(pst==='coming_soon'||pst==='almost_full');

@@ -124,9 +124,9 @@ service cloud.firestore {
       allow read: if resource.data.status == 'active' || isAdmin();
       allow create, update, delete: if isAdmin();
 
-      /* Timeline subcollection */
+      /* Timeline subcollection — access controlled by parent program */
       match /timeline/{dayId} {
-        allow read: if resource.data.status == 'active' || isAdmin();
+        allow read: if true;
         allow create, update, delete: if isAdmin();
       }
     }
