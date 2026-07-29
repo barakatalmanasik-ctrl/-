@@ -333,8 +333,8 @@ db.collection('programs').doc(programId).get().then(function(doc){
   }
 
   /* WhatsApp */
-  var waText='أرغب بالاستفسار عن برنامج '+esc(d.name);
-  document.getElementById('pdWALink').href='https://wa.me/9647744641155?text='+encodeURIComponent(waText);
+  var waText='السلام عليكم ورحمة الله وبركاته\n\nأرغب بالحجز في:\n'+esc(d.name)+'\n\nالاسم:\nعدد المسافرين:\nرقم الهاتف:\n\nوأرجو تزويدي بالتفاصيل الخاصة بالحجز.\n\nوشكراً لكم.';
+  document.getElementById('pdWALink').href='https://wa.me/'+COMPANY_WHATSAPP+'?text='+encodeURIComponent(waText);
 
   /* Notes */
   if(d.notes){

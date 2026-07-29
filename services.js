@@ -50,7 +50,7 @@ function loadServices(){
   SERVICES.forEach(function(s,i){
     var iconHtml=SVC_ICONS[s.icon]||SVC_ICONS['transport'];
     var waText='أرغب بالاستفسار عن '+esc(s.title);
-    var waLink='https://wa.me/9647744641155?text='+encodeURIComponent(waText);
+    var waLink='https://wa.me/'+COMPANY_WHATSAPP+'?text='+encodeURIComponent(waText);
 
     var card=document.createElement('div');
     card.className='svc-card';

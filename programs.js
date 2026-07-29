@@ -269,8 +269,8 @@ function populateModal(d,fallbackIdx){
 
   document.getElementById('pmPrice').textContent=d.price||'للاستفسار عن السعر';
 
-  var msg='السلام عليكم\nأرغب بحجز:\n'+(d.name||'')+'\nالاسم:\nرقم الهاتف:\nعدد المسافرين:\nوشكراً.';
-  document.getElementById('pmWALink').href='https://wa.me/9647744641155?text='+encodeURIComponent(msg);
+  var msg='السلام عليكم ورحمة الله وبركاته\n\nأرغب بالحجز في:\n'+(d.name||'')+'\n\nالاسم:\nعدد المسافرين:\nرقم الهاتف:\n\nوأرجو تزويدي بالتفاصيل الخاصة بالحجز.\n\nوشكراً لكم.';
+  document.getElementById('pmWALink').href='https://wa.me/'+COMPANY_WHATSAPP+'?text='+encodeURIComponent(msg);
 
   var pst=d.programStatus||'available';
   var waBtn=document.getElementById('pmWALink');
@@ -294,7 +294,7 @@ function populateModal(d,fallbackIdx){
     waBtn.textContent='استفسار عن البرنامج';
     waBtn.classList.add('btn-accent');
     waBtn.classList.remove('btn-disabled');
-    waBtn.href='https://wa.me/9647744641155?text='+encodeURIComponent(msg);
+    waBtn.href='https://wa.me/'+COMPANY_WHATSAPP+'?text='+encodeURIComponent(msg);
     waBtn.style.pointerEvents='';
     waBtn.style.background='';
     waBtn.style.cursor='';
@@ -424,8 +424,8 @@ function trySeedFirestore(){
 
 /* ── WhatsApp booking helper ── */
 function openBookingWA(name){
-  var msg='السلام عليكم\nأرغب بحجز:\n'+(name||'')+'\nالاسم:\nرقم الهاتف:\nعدد المسافرين:\nوشكراً.';
-  window.open('https://wa.me/9647744641155?text='+encodeURIComponent(msg),'_blank');
+  var msg='السلام عليكم ورحمة الله وبركاته\n\nأرغب بالحجز في:\n'+(name||'')+'\n\nالاسم:\nعدد المسافرين:\nرقم الهاتف:\n\nوأرجو تزويدي بالتفاصيل الخاصة بالحجز.\n\nوشكراً لكم.';
+  window.open('https://wa.me/'+COMPANY_WHATSAPP+'?text='+encodeURIComponent(msg),'_blank');
 }
 
 /* ── Render cards ── */
